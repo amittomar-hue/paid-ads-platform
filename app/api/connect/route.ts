@@ -3,22 +3,14 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const { platform, key } = await req.json();
 
-  if (!platform || !key) {
+  if (!platform || !key?.trim()) {
     return NextResponse.json({ error: "platform and key are required" }, { status: 400 });
   }
 
-  // Validate the key format minimally
-  if (platform === "google" && !key.startsWith("AIza") && key.length < 20) {
-    return NextResponse.json({ error: "Invalid Google API key format" }, { status: 400 });
-  }
-  if (platform === "linkedin" && key.length < 10) {
-    return NextResponse.json({ error: "Invalid LinkedIn key" }, { status: 400 });
-  }
-
-  const cookieName = platform === "google" ? "google_api_key" : "linkedin_api_key";
+  const cookieName = platform === "google" ? "google_account_id" : "linkedin_account_id";
   const res = NextResponse.json({ ok: true });
 
-  res.cookies.set(cookieName, key, {
+  res.cookies.set(cookieName, key.trim(), {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -31,7 +23,7 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const { platform } = await req.json();
-  const cookieName = platform === "google" ? "google_api_key" : "linkedin_api_key";
+  const cookieName = platform === "google" ? "google_account_id" : "linkedin_account_id";
   const res = NextResponse.json({ ok: true });
   res.cookies.delete(cookieName);
   return res;

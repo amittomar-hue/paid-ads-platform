@@ -42,8 +42,8 @@ const NAV = [
 ];
 
 const PLATFORMS = [
-  { key: "google" as const, label: "Google Ads", color: "#4285f4", placeholder: "AIzaSy... or Developer Token" },
-  { key: "linkedin" as const, label: "LinkedIn Ads", color: "#0077b5", placeholder: "LinkedIn Access Token" },
+  { key: "google" as const, label: "Google Ads", color: "#4285f4", fieldLabel: "Ad Account ID", placeholder: "e.g. 123-456-7890" },
+  { key: "linkedin" as const, label: "LinkedIn Ads", color: "#0077b5", fieldLabel: "Ad Account ID", placeholder: "e.g. 123456789" },
 ];
 
 export function Sidebar() {
@@ -156,6 +156,7 @@ export function Sidebar() {
                 {/* Inline connect form */}
                 {isExpanded && !isLive && (
                   <div className="ml-3.5 mb-2 space-y-1.5">
+                    <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-wider">{p.fieldLabel}</p>
                     <input
                       value={keys[p.key]}
                       onChange={(e) => setKeys((prev) => ({ ...prev, [p.key]: e.target.value }))}

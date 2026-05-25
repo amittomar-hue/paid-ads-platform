@@ -69,9 +69,18 @@ export default function SettingsPage() {
           {activeTab === "API Connections" && (
             <div className="space-y-4">
               <Card>
-                <CardHeader title="Google Ads API" subtitle="Connect your Google Ads account" action={<span className="text-[10px] text-amber-400 bg-amber-500/15 px-2 py-0.5 rounded">Not Connected</span>} />
+                <CardHeader title="Google API" subtitle="Google Cloud API key (Maps, Places, and supporting services)" action={<span className="text-[10px] text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded">Via Server Env</span>} />
                 <div className="space-y-3">
-                  <Input label="Developer Token" type="password" value={googleKey} onChange={(e) => setGoogleKey(e.target.value)} placeholder="Enter Google Ads Developer Token" hint="Found in Google Ads â†’ Tools â†’ API Center" />
+                  <p className="text-xs text-slate-500 bg-emerald-500/8 border border-emerald-500/20 rounded-lg p-3">
+                    <code className="text-emerald-600">GOOGLE_API_KEY</code> is set in <code className="text-emerald-600">.env.local</code> and loaded server-side only. It is never exposed to the browser.
+                  </p>
+                </div>
+              </Card>
+
+              <Card>
+                <CardHeader title="Google Ads API" subtitle="OAuth 2.0 credentials for live campaign data" action={<span className="text-[10px] text-amber-400 bg-amber-500/15 px-2 py-0.5 rounded">Not Connected</span>} />
+                <div className="space-y-3">
+                  <Input label="Developer Token" type="password" value={googleKey} onChange={(e) => setGoogleKey(e.target.value)} placeholder="Enter Google Ads Developer Token" hint="Found in Google Ads → Tools → API Center" />
                   <Input label="Customer ID" placeholder="123-456-7890" />
                   <Input label="OAuth Client ID" placeholder="your-client-id.apps.googleusercontent.com" />
                   <div className="flex gap-2">
@@ -321,6 +330,7 @@ export default function SettingsPage() {
                 <div className="bg-white rounded-lg p-4 font-mono text-xs space-y-1">
                   <p className="text-slate-500"># .env.local</p>
                   <p><span className="text-blue-400">ANTHROPIC_API_KEY</span>=<span className="text-emerald-400">sk-ant-your-key</span></p>
+                  <p><span className="text-blue-400">GOOGLE_API_KEY</span>=<span className="text-emerald-400">your-google-api-key</span></p>
                   <p><span className="text-blue-400">GOOGLE_ADS_DEVELOPER_TOKEN</span>=<span className="text-emerald-400">your-dev-token</span></p>
                   <p><span className="text-blue-400">GOOGLE_ADS_CLIENT_ID</span>=<span className="text-emerald-400">your-client-id</span></p>
                   <p><span className="text-blue-400">GOOGLE_ADS_CLIENT_SECRET</span>=<span className="text-emerald-400">your-secret</span></p>

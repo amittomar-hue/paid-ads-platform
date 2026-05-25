@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -37,6 +38,11 @@ const NAV = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const [connected, setConnected] = useState({ google: false, linkedin: false });
+
+  useEffect(() => {
+    fetch("/api/status").then((r) => r.json()).then(setConnected).catch(() => {});
+  }, []);
 
   return (
     <aside className="w-56 flex-shrink-0 bg-white border-r border-slate-200 flex flex-col h-screen sticky top-0">
@@ -55,18 +61,26 @@ export function Sidebar() {
 
       {/* Platform indicators */}
       <div className="px-5 py-3 border-b border-slate-200">
-        <p className="text-[10px] font-medium text-slate-500 mb-2 uppercase tracking-wider">Connected</p>
+        <p className="text-[10px] font-medium text-slate-500 mb-2 uppercase tracking-wider">Platforms</p>
         <div className="flex flex-col gap-1.5">
           {[
-            { label: "Google Ads", color: "#4285f4" },
-            { label: "LinkedIn Ads", color: "#0077b5" },
-          ].map((p) => (
-            <div key={p.label} className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: p.color }} />
-              <span className="text-xs text-slate-400">{p.label}</span>
-              <span className="ml-auto text-[10px] text-emerald-400 font-medium">Live</span>
-            </div>
-          ))}
+            { label: "Google Ads", color: "#4285f4", key: "google" as const },
+            { label: "LinkedIn Ads", color: "#0077b5", key: "linkedin" as const },
+          ].map((p) => {
+            const isLive = connected[p.key];
+            return (
+              <div key={p.label} className="flex items-center gap-2">
+                <span
+                  className={cn("w-1.5 h-1.5 rounded-full", isLive && "animate-pulse")}
+                  style={{ background: isLive ? p.color : "#94a3b8" }}
+                />
+                <span className="text-xs text-slate-400">{p.label}</span>
+                <span className={cn("ml-auto text-[10px] font-medium", isLive ? "text-emerald-400" : "text-slate-400")}>
+                  {isLive ? "Live" : "Not set"}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
 

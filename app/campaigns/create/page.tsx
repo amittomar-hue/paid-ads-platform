@@ -101,12 +101,12 @@ Return ONLY valid JSON matching exactly this schema:
           {/* Step indicator */}
           <div className="flex items-center gap-3 text-xs">
             <div className={`flex items-center gap-1.5 ${step === "form" ? "text-blue-400" : "text-emerald-400"}`}>
-              {step === "plan" ? <CheckCircle size={13} /> : <span className="w-4 h-4 rounded-full bg-blue-600 flex items-center justify-center text-white text-[10px] font-bold">1</span>}
+              {step === "plan" ? <CheckCircle size={13} /> : <span className="w-4 h-4 rounded-full bg-blue-600 flex items-center justify-center text-slate-900 text-[10px] font-bold">1</span>}
               Campaign Details
             </div>
-            <ChevronRight size={12} className="text-slate-600" />
+            <ChevronRight size={12} className="text-slate-500" />
             <div className={`flex items-center gap-1.5 ${step === "plan" ? "text-blue-400" : "text-slate-500"}`}>
-              <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${step === "plan" ? "bg-blue-600 text-white" : "bg-white/10 text-slate-500"}`}>2</span>
+              <span className={`w-4 h-4 rounded-full flex items-center justify-center text-[10px] font-bold ${step === "plan" ? "bg-blue-600 text-slate-900" : "bg-slate-200 text-slate-500"}`}>2</span>
               AI Plan
             </div>
           </div>
@@ -124,17 +124,17 @@ Return ONLY valid JSON matching exactly this schema:
                       className={`flex items-center gap-3 p-4 rounded-xl border transition-colors text-left ${
                         platform === p.id
                           ? "border-blue-500/40 bg-blue-500/10"
-                          : "border-white/8 bg-white/3 hover:border-white/15"
+                          : "border-slate-200 bg-slate-50 hover:border-slate-200"
                       }`}
                     >
                       <div
-                        className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
+                        className="w-9 h-9 rounded-lg flex items-center justify-center text-slate-900 font-bold text-sm flex-shrink-0"
                         style={{ background: p.color }}
                       >
                         {p.icon}
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-white">{p.name}</p>
+                        <p className="text-sm font-medium text-slate-900">{p.name}</p>
                         <p className="text-xs text-slate-500">{p.types.length} campaign types</p>
                       </div>
                       {platform === p.id && <CheckCircle size={16} className="ml-auto text-blue-400" />}
@@ -237,9 +237,9 @@ Return ONLY valid JSON matching exactly this schema:
                     { label: "Daily Budget", value: `₹${plan.campaign.budget_daily?.toLocaleString("en-IN")}` },
                     { label: "Total Budget", value: `₹${plan.campaign.budget_total?.toLocaleString("en-IN")}` },
                   ].map((m) => (
-                    <div key={m.label} className="bg-white/4 rounded-lg p-3">
+                    <div key={m.label} className="bg-slate-50 rounded-lg p-3">
                       <p className="text-[10px] text-slate-500">{m.label}</p>
-                      <p className="text-sm font-medium text-white mt-0.5">{m.value}</p>
+                      <p className="text-sm font-medium text-slate-900 mt-0.5">{m.value}</p>
                     </div>
                   ))}
                 </div>
@@ -249,9 +249,9 @@ Return ONLY valid JSON matching exactly this schema:
                 <CardHeader title="KPI Targets" />
                 <div className="grid grid-cols-3 gap-3">
                   {Object.entries(plan.kpi_targets).map(([k, v]) => (
-                    <div key={k} className="bg-white/4 rounded-lg p-3 text-center">
+                    <div key={k} className="bg-slate-50 rounded-lg p-3 text-center">
                       <p className="text-[10px] text-slate-500 capitalize">{k.replace("_", " ")}</p>
-                      <p className="text-sm font-semibold text-white mt-0.5">{typeof v === "number" ? v.toLocaleString("en-IN") : v}</p>
+                      <p className="text-sm font-semibold text-slate-900 mt-0.5">{typeof v === "number" ? v.toLocaleString("en-IN") : v}</p>
                     </div>
                   ))}
                 </div>
@@ -265,7 +265,7 @@ Return ONLY valid JSON matching exactly this schema:
                     .map(([k, v]) => (
                       <div key={k} className="flex gap-3">
                         <span className="text-slate-500 w-28 flex-shrink-0 capitalize">{k.replace(/_/g, " ")}</span>
-                        <span className="text-slate-300">{Array.isArray(v) ? v.join(", ") : String(v)}</span>
+                        <span className="text-slate-700">{Array.isArray(v) ? v.join(", ") : String(v)}</span>
                       </div>
                     ))}
                 </div>
@@ -275,9 +275,9 @@ Return ONLY valid JSON matching exactly this schema:
                 <CardHeader title="Ad Groups" subtitle={`${plan.ad_structure.ad_groups.length} groups`} />
                 <div className="space-y-3">
                   {plan.ad_structure.ad_groups.map((ag, i) => (
-                    <div key={i} className="p-3 rounded-lg bg-white/4 border border-white/8">
+                    <div key={i} className="p-3 rounded-lg bg-slate-50 border border-slate-200">
                       <div className="flex items-center justify-between mb-1.5">
-                        <p className="text-xs font-medium text-white">{ag.name}</p>
+                        <p className="text-xs font-medium text-slate-900">{ag.name}</p>
                         <span className="text-xs text-slate-400">Bid: ₹{ag.bid}</span>
                       </div>
                       <p className="text-xs text-slate-500">{ag.theme}</p>
@@ -297,7 +297,7 @@ Return ONLY valid JSON matching exactly this schema:
                 <CardHeader title="Launch Checklist" />
                 <ul className="space-y-2">
                   {plan.launch_checklist.map((item: string, i: number) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-slate-300">
+                    <li key={i} className="flex items-start gap-2 text-xs text-slate-700">
                       <CheckCircle size={13} className="text-emerald-400 mt-0.5 flex-shrink-0" />
                       {item}
                     </li>
@@ -309,7 +309,7 @@ Return ONLY valid JSON matching exactly this schema:
                 <CardHeader title="AI Recommendations" />
                 <ul className="space-y-2">
                   {plan.ai_recommendations.map((item: string, i: number) => (
-                    <li key={i} className="flex items-start gap-2 text-xs text-slate-300">
+                    <li key={i} className="flex items-start gap-2 text-xs text-slate-700">
                       <Sparkles size={12} className="text-blue-400 mt-0.5 flex-shrink-0" />
                       {item}
                     </li>

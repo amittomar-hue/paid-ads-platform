@@ -7,12 +7,12 @@ interface BadgeProps {
 }
 
 const variantMap = {
-  default: "bg-slate-500/20 text-slate-300 ring-1 ring-slate-500/30",
+  default: "bg-slate-500/20 text-slate-700 ring-1 ring-slate-500/30",
   success: "bg-emerald-500/20 text-emerald-400 ring-1 ring-emerald-500/30",
   warning: "bg-amber-500/20 text-amber-400 ring-1 ring-amber-500/30",
   danger: "bg-red-500/20 text-red-400 ring-1 ring-red-500/30",
   info: "bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/30",
-  muted: "bg-white/5 text-slate-400 ring-1 ring-white/10",
+  muted: "bg-slate-100 text-slate-500 ring-1 ring-slate-200",
 };
 
 export function Badge({ children, variant = "default", className }: BadgeProps) {

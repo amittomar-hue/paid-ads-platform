@@ -96,10 +96,10 @@ Return JSON:
                     className={`w-full text-left p-3 rounded-lg border transition-colors ${
                       selectedCampaign.id === c.id
                         ? "border-blue-500/40 bg-blue-500/10"
-                        : "border-white/6 bg-white/3 hover:border-white/12"
+                        : "border-slate-200 bg-slate-50 hover:border-slate-200"
                     }`}
                   >
-                    <p className="text-xs font-medium text-white">{c.name}</p>
+                    <p className="text-xs font-medium text-slate-900">{c.name}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <PlatformBadge platform={c.platform} />
                       <span className="text-[10px] text-slate-500">ROAS {c.roas}x · QS {c.quality_score}</span>
@@ -130,7 +130,7 @@ Return JSON:
                     MEDIUM:   { label: "Applied · 2h Undo",       bg: "bg-blue-500/8 border-blue-500/20",     badge: "bg-blue-500/15 text-blue-400" },
                     HIGH:     { label: "Pending Approval",        bg: "bg-amber-500/8 border-amber-500/20",   badge: "bg-amber-500/15 text-amber-400" },
                     CRITICAL: { label: "2-Person Approval Req.",  bg: "bg-red-500/8 border-red-500/20",       badge: "bg-red-500/15 text-red-400" },
-                  }[tier] ?? { label: tier, bg: "bg-white/3 border-white/6", badge: "bg-slate-500/15 text-slate-400" };
+                  }[tier] ?? { label: tier, bg: "bg-slate-50 border-slate-200", badge: "bg-slate-500/15 text-slate-400" };
 
                   return (
                     <div key={action.id} className={`p-3 rounded-lg border ${tierCfg.bg}`}>
@@ -140,7 +140,7 @@ Return JSON:
                           {tier === "MEDIUM" && <Clock size={11} className="text-blue-400 flex-shrink-0" />}
                           {tier === "HIGH" && <AlertTriangle size={11} className="text-amber-400 flex-shrink-0" />}
                           {tier === "CRITICAL" && <ShieldAlert size={11} className="text-red-400 flex-shrink-0" />}
-                          <p className="text-xs font-medium text-white truncate">{action.type}</p>
+                          <p className="text-xs font-medium text-slate-900 truncate">{action.type}</p>
                         </div>
                         <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium flex-shrink-0 ${tierCfg.badge}`}>{tierCfg.label}</span>
                       </div>
@@ -171,7 +171,7 @@ Return JSON:
                   );
                 })}
               </div>
-              <div className="mt-3 p-2.5 rounded-lg bg-white/3 border border-white/6 space-y-1 text-[10px] text-slate-500">
+              <div className="mt-3 p-2.5 rounded-lg bg-slate-50 border border-slate-200 space-y-1 text-[10px] text-slate-500">
                 <p className="flex items-center gap-1.5"><span className="text-emerald-400 font-medium">LOW</span> &lt;10% budget / &lt;20% bid → Auto-execute</p>
                 <p className="flex items-center gap-1.5"><span className="text-blue-400 font-medium">MEDIUM</span> 10–25% budget / 20–50% bid → Auto + 2h undo</p>
                 <p className="flex items-center gap-1.5"><span className="text-amber-400 font-medium">HIGH</span> &gt;25% budget / &gt;50% bid → 4h approval SLA</p>
@@ -184,9 +184,9 @@ Return JSON:
           <div className="lg:col-span-2 space-y-5">
             {!result && !loading && (
               <Card className="flex flex-col items-center justify-center py-20 text-center">
-                <Zap size={32} className="text-slate-600 mb-3" />
+                <Zap size={32} className="text-slate-500 mb-3" />
                 <p className="text-sm text-slate-400">Select a campaign and run optimization analysis</p>
-                <p className="text-xs text-slate-600 mt-1">AI will analyze performance and generate actionable recommendations</p>
+                <p className="text-xs text-slate-500 mt-1">AI will analyze performance and generate actionable recommendations</p>
               </Card>
             )}
 
@@ -194,7 +194,7 @@ Return JSON:
               <Card className="flex flex-col items-center justify-center py-20">
                 <Loader2 size={32} className="text-blue-400 animate-spin mb-3" />
                 <p className="text-sm text-slate-400">Analyzing {selectedCampaign.name}...</p>
-                <p className="text-xs text-slate-600 mt-1">Running ML models · Checking bid efficiency · Auditing quality signals</p>
+                <p className="text-xs text-slate-500 mt-1">Running ML models · Checking bid efficiency · Auditing quality signals</p>
               </Card>
             )}
 
@@ -210,9 +210,9 @@ Return JSON:
                     <div className="flex-1">
                       <div className="flex items-center justify-between mb-1.5">
                         <p className="text-xs text-slate-400">Overall Health Score</p>
-                        <p className="text-sm font-bold text-white">{result.overall_score}/100</p>
+                        <p className="text-sm font-bold text-slate-900">{result.overall_score}/100</p>
                       </div>
-                      <div className="w-full h-2 rounded-full bg-white/8">
+                      <div className="w-full h-2 rounded-full bg-slate-100">
                         <div
                           className="h-full rounded-full transition-all"
                           style={{
@@ -237,13 +237,13 @@ Return JSON:
                       }`}>
                         <div className="flex items-center gap-2 mb-1">
                           {severityIcon(issue.severity)}
-                          <p className="text-xs font-medium text-white">{issue.title}</p>
+                          <p className="text-xs font-medium text-slate-900">{issue.title}</p>
                           <span className={`ml-auto text-[10px] font-medium ${
                             issue.severity === "Critical" ? "text-red-400" : issue.severity === "Warning" ? "text-amber-400" : "text-blue-400"
                           }`}>{issue.severity}</span>
                         </div>
                         <p className="text-xs text-slate-400 mb-1.5">{issue.description}</p>
-                        <p className="text-xs text-slate-300">
+                        <p className="text-xs text-slate-700">
                           <span className="text-slate-500">Fix: </span>{issue.fix}
                         </p>
                       </div>
@@ -256,11 +256,11 @@ Return JSON:
                   <CardHeader title="30-Day Forecast" subtitle="If recommendations are applied" />
                   <div className="grid grid-cols-2 gap-2">
                     {result.forecast_30d.map((f, i) => (
-                      <div key={i} className="p-3 rounded-lg bg-white/4 border border-white/8">
+                      <div key={i} className="p-3 rounded-lg bg-slate-50 border border-slate-200">
                         <p className="text-[10px] text-slate-500">{f.metric}</p>
                         <div className="flex items-end justify-between mt-1">
                           <p className="text-xs text-slate-400">{f.current}</p>
-                          <p className="text-xs font-semibold text-white">→ {f.predicted}</p>
+                          <p className="text-xs font-semibold text-slate-900">→ {f.predicted}</p>
                         </div>
                         <p className="text-[10px] text-emerald-400 mt-0.5">{f.change}</p>
                       </div>
@@ -273,7 +273,7 @@ Return JSON:
                   <CardHeader title="Quick Wins" subtitle="Low-effort, high-impact actions" />
                   <ul className="space-y-2">
                     {result.quick_wins.map((win, i) => (
-                      <li key={i} className="flex items-start gap-2 text-xs text-slate-300">
+                      <li key={i} className="flex items-start gap-2 text-xs text-slate-700">
                         <CheckCircle size={12} className="text-emerald-400 mt-0.5 flex-shrink-0" />
                         {win}
                       </li>
@@ -286,8 +286,8 @@ Return JSON:
                   <CardHeader title="Bid Strategy Recommendations" />
                   <div className="space-y-3">
                     {result.bid_recommendations.map((b, i) => (
-                      <div key={i} className="p-3 rounded-lg bg-white/4">
-                        <p className="text-xs font-medium text-white mb-1">{b.strategy}</p>
+                      <div key={i} className="p-3 rounded-lg bg-slate-50">
+                        <p className="text-xs font-medium text-slate-900 mb-1">{b.strategy}</p>
                         <p className="text-xs text-slate-400 mb-1">{b.rationale}</p>
                         <p className="text-xs text-emerald-400">{b.expected_impact}</p>
                       </div>

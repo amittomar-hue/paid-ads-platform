@@ -40,7 +40,7 @@ export default function AlertsPage() {
             { label: "Critical", value: active.filter((a) => a.severity === "critical").length, color: "#ef4444" },
             { label: "Resolved (24h)", value: resolved.length, color: "#10b981" },
           ].map((s) => (
-            <div key={s.label} className="bg-[#1c1c24] border border-white/8 rounded-xl p-4">
+            <div key={s.label} className="bg-white border border-slate-200 rounded-xl p-4">
               <p className="text-2xl font-bold" style={{ color: s.color }}>{s.value}</p>
               <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
             </div>
@@ -67,7 +67,7 @@ export default function AlertsPage() {
                       <div className="mt-0.5">{typeIcon(alert.type)}</div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <p className="text-sm font-semibold text-white">{alert.campaign_name}</p>
+                          <p className="text-sm font-semibold text-slate-900">{alert.campaign_name}</p>
                           <span className={cn(
                             "text-[10px] font-medium px-1.5 py-0.5 rounded",
                             alert.severity === "critical" ? "bg-red-500/20 text-red-400" :
@@ -77,7 +77,7 @@ export default function AlertsPage() {
                             {alert.severity.charAt(0).toUpperCase() + alert.severity.slice(1)}
                           </span>
                         </div>
-                        <p className="text-xs text-slate-300 mb-2">{alert.description}</p>
+                        <p className="text-xs text-slate-700 mb-2">{alert.description}</p>
                         <div className="flex items-center gap-2">
                           <PlatformBadge platform={alert.platform} />
                           <span className="text-[10px] text-slate-500">Metric: {alert.metric}</span>
@@ -99,7 +99,7 @@ export default function AlertsPage() {
         {active.length === 0 && (
           <Card className="flex flex-col items-center justify-center py-16 text-center">
             <CheckCircle size={32} className="text-emerald-400 mb-3" />
-            <p className="text-sm text-white font-medium">All clear!</p>
+            <p className="text-sm text-slate-900 font-medium">All clear!</p>
             <p className="text-xs text-slate-500 mt-1">No active alerts — all campaigns performing within expected ranges</p>
           </Card>
         )}
@@ -110,10 +110,10 @@ export default function AlertsPage() {
             <CardHeader title="Resolved Alerts" subtitle={`${resolved.length} resolved`} />
             <div className="space-y-2">
               {resolved.map((alert) => (
-                <div key={alert.id} className="flex items-center gap-3 p-3 rounded-lg bg-white/3 border border-white/6 opacity-60">
+                <div key={alert.id} className="flex items-center gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200 opacity-60">
                   <CheckCircle size={13} className="text-emerald-400 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-white truncate">{alert.campaign_name} — {alert.metric}</p>
+                    <p className="text-xs font-medium text-slate-900 truncate">{alert.campaign_name} — {alert.metric}</p>
                     <p className="text-[11px] text-slate-500">{alert.description}</p>
                   </div>
                   <PlatformBadge platform={alert.platform} />

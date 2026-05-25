@@ -15,7 +15,7 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
 }
 
 const inputBase =
-  "w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 transition-colors";
+  "w-full bg-slate-100 border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 transition-colors";
 
 export function Input({ label, hint, error, className, ...props }: InputProps) {
   return (
@@ -56,13 +56,13 @@ export function Select({ label, hint, options, className, ...props }: SelectProp
       <select
         className={cn(
           inputBase,
-          "appearance-none bg-[#1c1c24] cursor-pointer",
+          "appearance-none bg-white cursor-pointer",
           className
         )}
         {...props}
       >
         {options.map((o) => (
-          <option key={o.value} value={o.value} className="bg-[#1c1c24]">
+          <option key={o.value} value={o.value} className="bg-white">
             {o.label}
           </option>
         ))}

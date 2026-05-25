@@ -12,8 +12,8 @@ export function Card({ children, className, hover, onClick }: CardProps) {
     <div
       onClick={onClick}
       className={cn(
-        "bg-[#1c1c24] border border-white/8 rounded-xl p-5",
-        hover && "transition-colors hover:border-white/15 cursor-pointer",
+        "bg-white border border-slate-200 rounded-xl p-5",
+        hover && "transition-colors hover:border-slate-200 cursor-pointer",
         className
       )}
     >
@@ -36,7 +36,7 @@ export function CardHeader({
   return (
     <div className={cn("flex items-start justify-between gap-3 mb-4", className)}>
       <div>
-        <h3 className="text-sm font-semibold text-white">{title}</h3>
+        <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
         {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
       </div>
       {action && <div className="flex-shrink-0">{action}</div>}

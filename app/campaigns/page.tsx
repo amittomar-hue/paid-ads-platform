@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { TopBar } from "@/components/layout/TopBar";
 import { Button } from "@/components/ui/Button";
@@ -26,7 +26,7 @@ export default function CampaignsPage() {
     <div className="flex flex-col flex-1">
       <TopBar
         title="Campaigns"
-        subtitle={`${MOCK_CAMPAIGNS.length} total · ${MOCK_CAMPAIGNS.filter((c) => c.status === "Active").length} active`}
+        subtitle={`${MOCK_CAMPAIGNS.length} total Â· ${MOCK_CAMPAIGNS.filter((c) => c.status === "Active").length} active`}
         action={
           <Link href="/campaigns/create">
             <Button variant="primary" size="sm">
@@ -46,29 +46,29 @@ export default function CampaignsPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search campaigns..."
-                className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/60"
+                className="w-full bg-slate-100 border border-slate-200 rounded-lg pl-9 pr-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-blue-500/60"
               />
             </div>
-            <div className="flex gap-1 bg-white/4 rounded-lg p-1 border border-white/8">
+            <div className="flex gap-1 bg-slate-50 rounded-lg p-1 border border-slate-200">
               {(["all", "google", "linkedin"] as const).map((p) => (
                 <button
                   key={p}
                   onClick={() => setPlatformFilter(p)}
                   className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
-                    platformFilter === p ? "bg-white/10 text-white" : "text-slate-400 hover:text-slate-300"
+                    platformFilter === p ? "bg-slate-200 text-slate-900" : "text-slate-400 hover:text-slate-700"
                   }`}
                 >
                   {p === "all" ? "All Platforms" : p === "google" ? "Google Ads" : "LinkedIn Ads"}
                 </button>
               ))}
             </div>
-            <div className="flex gap-1 bg-white/4 rounded-lg p-1 border border-white/8">
+            <div className="flex gap-1 bg-slate-50 rounded-lg p-1 border border-slate-200">
               {["all", "Active", "Paused", "Draft"].map((s) => (
                 <button
                   key={s}
                   onClick={() => setStatusFilter(s)}
                   className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${
-                    statusFilter === s ? "bg-white/10 text-white" : "text-slate-400 hover:text-slate-300"
+                    statusFilter === s ? "bg-slate-200 text-slate-900" : "text-slate-400 hover:text-slate-700"
                   }`}
                 >
                   {s === "all" ? "All Status" : s}
@@ -82,7 +82,7 @@ export default function CampaignsPage() {
         <Card className="p-0 overflow-hidden">
           <table className="w-full text-xs">
             <thead>
-              <tr className="border-b border-white/8 bg-white/3">
+              <tr className="border-b border-slate-200 bg-slate-50">
                 {["Campaign", "Platform", "Status", "Budget/Day", "Spend", "Impressions", "CTR", "Conversions", "CPA", "ROAS", "QS"].map(
                   (h) => (
                     <th
@@ -97,11 +97,11 @@ export default function CampaignsPage() {
             </thead>
             <tbody>
               {filtered.map((c) => (
-                <tr key={c.id} className="border-b border-white/5 hover:bg-white/3 transition-colors">
+                <tr key={c.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
                   <td className="px-4 py-3">
                     <div>
-                      <p className="font-medium text-white">{c.name}</p>
-                      <p className="text-slate-500 text-[10px] mt-0.5">{c.type} · {c.objective}</p>
+                      <p className="font-medium text-slate-900">{c.name}</p>
+                      <p className="text-slate-500 text-[10px] mt-0.5">{c.type} Â· {c.objective}</p>
                     </div>
                   </td>
                   <td className="px-4 py-3">
@@ -112,16 +112,16 @@ export default function CampaignsPage() {
                       {c.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-slate-300">{formatCurrency(c.budget_daily)}</td>
-                  <td className="px-4 py-3 text-slate-300">{formatCurrency(c.spend, true)}</td>
-                  <td className="px-4 py-3 text-slate-300">{formatNumber(c.impressions, true)}</td>
+                  <td className="px-4 py-3 text-slate-700">{formatCurrency(c.budget_daily)}</td>
+                  <td className="px-4 py-3 text-slate-700">{formatCurrency(c.spend, true)}</td>
+                  <td className="px-4 py-3 text-slate-700">{formatNumber(c.impressions, true)}</td>
                   <td className="px-4 py-3">
-                    <span className={c.ctr > 2.5 ? "text-emerald-400" : c.ctr < 1.5 ? "text-red-400" : "text-slate-300"}>
+                    <span className={c.ctr > 2.5 ? "text-emerald-400" : c.ctr < 1.5 ? "text-red-400" : "text-slate-700"}>
                       {formatPct(c.ctr)}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-slate-300">{formatNumber(c.conversions)}</td>
-                  <td className="px-4 py-3 text-slate-300">{formatCurrency(c.cpa)}</td>
+                  <td className="px-4 py-3 text-slate-700">{formatNumber(c.conversions)}</td>
+                  <td className="px-4 py-3 text-slate-700">{formatCurrency(c.cpa)}</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1">
                       {c.roas >= 4 ? (
@@ -129,14 +129,14 @@ export default function CampaignsPage() {
                       ) : c.roas < 2.5 ? (
                         <TrendingDown size={11} className="text-red-400" />
                       ) : null}
-                      <span className={c.roas >= 4 ? "text-emerald-400 font-semibold" : c.roas < 2.5 ? "text-red-400" : "text-slate-300"}>
+                      <span className={c.roas >= 4 ? "text-emerald-400 font-semibold" : c.roas < 2.5 ? "text-red-400" : "text-slate-700"}>
                         {c.roas.toFixed(1)}x
                       </span>
                     </div>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
-                      <div className="w-14 h-1.5 rounded-full bg-white/8">
+                      <div className="w-14 h-1.5 rounded-full bg-slate-100">
                         <div
                           className="h-full rounded-full"
                           style={{
@@ -162,3 +162,4 @@ export default function CampaignsPage() {
     </div>
   );
 }
+

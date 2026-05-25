@@ -37,10 +37,10 @@ export default function AutomationPage() {
 
       <div className="flex-1 p-6 overflow-y-auto space-y-5">
         {/* Main Tabs */}
-        <div className="flex gap-1 bg-white/4 rounded-lg p-1 border border-white/8 w-fit">
+        <div className="flex gap-1 bg-slate-50 rounded-lg p-1 border border-slate-200 w-fit">
           {MAIN_TABS.map((t) => (
             <button key={t} onClick={() => setMainTab(t)}
-              className={`px-4 py-2 rounded text-xs font-medium transition-colors flex items-center gap-1.5 ${mainTab === t ? "bg-white/10 text-white" : "text-slate-400 hover:text-slate-300"}`}>
+              className={`px-4 py-2 rounded text-xs font-medium transition-colors flex items-center gap-1.5 ${mainTab === t ? "bg-slate-200 text-slate-900" : "text-slate-400 hover:text-slate-700"}`}>
               {t === "Activity Log" ? <List size={12} /> : <Zap size={12} />}
               {t}
             </button>
@@ -52,11 +52,11 @@ export default function AutomationPage() {
             <CardHeader title="Automation Activity Log" subtitle="Chronological feed of all automated changes" />
             <div className="space-y-2">
               {ACTIVITY_LOG.map((log) => (
-                <div key={log.id} className="p-4 rounded-lg bg-white/3 border border-white/6">
+                <div key={log.id} className="p-4 rounded-lg bg-slate-50 border border-slate-200">
                   <div className="flex items-start justify-between gap-3 mb-2">
                     <div className="flex items-center gap-2">
                       <code className="text-[10px] text-blue-400 bg-blue-500/10 px-1.5 py-0.5 rounded font-bold">{log.rule.split(" ")[0]}</code>
-                      <p className="text-xs font-medium text-white">{log.rule.substring(log.rule.indexOf(" ") + 1)}</p>
+                      <p className="text-xs font-medium text-slate-900">{log.rule.substring(log.rule.indexOf(" ") + 1)}</p>
                     </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                       <PlatformBadge platform={log.platform as "google" | "linkedin"} />
@@ -70,14 +70,14 @@ export default function AutomationPage() {
                     </div>
                     <div>
                       <p className="text-[10px] text-slate-500 mb-0.5">Action Taken</p>
-                      <p className="text-slate-300">{log.action}</p>
+                      <p className="text-slate-700">{log.action}</p>
                     </div>
                     <div>
                       <p className="text-[10px] text-slate-500 mb-0.5">Outcome (24h)</p>
                       <p className="text-emerald-400">{log.outcome}</p>
                     </div>
                   </div>
-                  <p className="text-[10px] text-slate-600 mt-2 flex items-center gap-1">
+                  <p className="text-[10px] text-slate-500 mt-2 flex items-center gap-1">
                     <Clock size={9} /> {new Date(log.timestamp).toLocaleString()}
                   </p>
                 </div>
@@ -94,12 +94,12 @@ export default function AutomationPage() {
             { label: "Total Rules", value: String(rules.length), icon: Settings, color: "#4285f4" },
             { label: "Total Executions", value: totalExecutions.toLocaleString(), icon: Activity, color: "#8b5cf6" },
           ].map((s) => (
-            <div key={s.label} className="bg-[#1c1c24] border border-white/8 rounded-xl p-4 flex items-center gap-3">
+            <div key={s.label} className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `${s.color}20` }}>
                 <s.icon size={16} style={{ color: s.color }} />
               </div>
               <div>
-                <p className="text-xl font-bold text-white">{s.value}</p>
+                <p className="text-xl font-bold text-slate-900">{s.value}</p>
                 <p className="text-xs text-slate-500">{s.label}</p>
               </div>
             </div>
@@ -109,18 +109,18 @@ export default function AutomationPage() {
         {/* Filters */}
         <Card className="p-4">
           <div className="flex flex-wrap items-center gap-3">
-            <div className="flex gap-1 bg-white/4 rounded-lg p-1 border border-white/8">
+            <div className="flex gap-1 bg-slate-50 rounded-lg p-1 border border-slate-200">
               {CATEGORIES.map((c) => (
                 <button key={c} onClick={() => setCategory(c)}
-                  className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${category === c ? "bg-white/10 text-white" : "text-slate-400 hover:text-slate-300"}`}>
+                  className={`px-3 py-1.5 rounded text-xs font-medium transition-colors ${category === c ? "bg-slate-200 text-slate-900" : "text-slate-400 hover:text-slate-700"}`}>
                   {c}
                 </button>
               ))}
             </div>
-            <div className="flex gap-1 bg-white/4 rounded-lg p-1 border border-white/8">
+            <div className="flex gap-1 bg-slate-50 rounded-lg p-1 border border-slate-200">
               {(["all", "google", "linkedin", "both"] as const).map((p) => (
                 <button key={p} onClick={() => setPlatformFilter(p)}
-                  className={`px-3 py-1.5 rounded text-xs font-medium transition-colors capitalize ${platformFilter === p ? "bg-white/10 text-white" : "text-slate-400 hover:text-slate-300"}`}>
+                  className={`px-3 py-1.5 rounded text-xs font-medium transition-colors capitalize ${platformFilter === p ? "bg-slate-200 text-slate-900" : "text-slate-400 hover:text-slate-700"}`}>
                   {p}
                 </button>
               ))}
@@ -133,15 +133,15 @@ export default function AutomationPage() {
           {filtered.map((rule) => (
             <Card key={rule.id} className={`transition-colors ${rule.enabled ? "" : "opacity-60"}`}>
               <div className="flex items-start gap-3">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${rule.enabled ? "bg-emerald-500/20" : "bg-white/5"}`}>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${rule.enabled ? "bg-emerald-500/20" : "bg-slate-100"}`}>
                   <Zap size={14} className={rule.enabled ? "text-emerald-400" : "text-slate-500"} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between gap-2 mb-1">
-                    <p className="text-sm font-semibold text-white">{rule.name}</p>
+                    <p className="text-sm font-semibold text-slate-900">{rule.name}</p>
                     <button
                       onClick={() => toggle(rule.id)}
-                      className={`flex-shrink-0 w-8 h-4 rounded-full transition-colors relative ${rule.enabled ? "bg-emerald-500" : "bg-white/15"}`}
+                      className={`flex-shrink-0 w-8 h-4 rounded-full transition-colors relative ${rule.enabled ? "bg-emerald-500" : "bg-slate-200"}`}
                     >
                       <span className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-transform ${rule.enabled ? "right-0.5" : "left-0.5"}`} />
                     </button>
@@ -155,7 +155,7 @@ export default function AutomationPage() {
                     </div>
                     <div className="flex items-start gap-2 text-xs">
                       <span className="text-slate-500 w-14 flex-shrink-0">Action:</span>
-                      <span className="text-slate-300">{rule.action}</span>
+                      <span className="text-slate-700">{rule.action}</span>
                     </div>
                   </div>
 
@@ -168,7 +168,7 @@ export default function AutomationPage() {
                     ) : (
                       <PlatformBadge platform={rule.platform} />
                     )}
-                    <span className="text-[10px] text-slate-500 bg-white/4 px-1.5 py-0.5 rounded">{rule.category}</span>
+                    <span className="text-[10px] text-slate-500 bg-slate-50 px-1.5 py-0.5 rounded">{rule.category}</span>
                     <span className="ml-auto flex items-center gap-1 text-[10px] text-slate-500">
                       <Activity size={10} />
                       {rule.executions} runs
@@ -176,7 +176,7 @@ export default function AutomationPage() {
                   </div>
 
                   {rule.last_triggered && (
-                    <div className="flex items-center gap-1 mt-2 text-[10px] text-slate-600">
+                    <div className="flex items-center gap-1 mt-2 text-[10px] text-slate-500">
                       <Clock size={9} />
                       Last triggered: {new Date(rule.last_triggered).toLocaleString()}
                     </div>
@@ -192,9 +192,9 @@ export default function AutomationPage() {
         </div>
 
         {/* Add Rule CTA */}
-        <Card className="border-dashed border-white/15 bg-transparent flex items-center justify-center p-8 text-center">
+        <Card className="border-dashed border-slate-200 bg-transparent flex items-center justify-center p-8 text-center">
           <div>
-            <Zap size={24} className="text-slate-600 mx-auto mb-2" />
+            <Zap size={24} className="text-slate-500 mx-auto mb-2" />
             <p className="text-sm text-slate-400 mb-3">Create a custom automation rule</p>
             <Button variant="outline" size="sm">
               <Settings size={13} /> New Rule

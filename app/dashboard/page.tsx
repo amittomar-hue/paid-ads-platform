@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { TopBar } from "@/components/layout/TopBar";
 import { KpiCard } from "@/components/ui/KpiCard";
@@ -60,7 +60,7 @@ export default function DashboardPage() {
     <div className="flex flex-col flex-1">
       <TopBar
         title="Executive Dashboard"
-        subtitle="Last updated: just now · Auto-refresh every 15 min"
+        subtitle="Last updated: just now Â· Auto-refresh every 15 min"
         action={
           <Link href="/campaigns/create">
             <Button variant="primary" size="sm">
@@ -145,7 +145,7 @@ export default function DashboardPage() {
             />
             <ResponsiveContainer width="100%" height={200}>
               <BarChart data={WEEKLY_SPEND} barSize={10} barGap={4}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.06)" />
                 <XAxis
                   dataKey="week"
                   tick={{ fill: "#64748b", fontSize: 11 }}
@@ -156,20 +156,20 @@ export default function DashboardPage() {
                   tick={{ fill: "#64748b", fontSize: 11 }}
                   axisLine={false}
                   tickLine={false}
-                  tickFormatter={(v) => `₹${v / 1000}K`}
+                  tickFormatter={(v) => `â‚¹${v / 1000}K`}
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "#1c1c24",
-                    border: "1px solid rgba(255,255,255,0.1)",
+                    background: "#ffffff",
+                    border: "1px solid #e2e8f0",
                     borderRadius: 8,
-                    color: "#f1f5f9",
+                    color: "#0f172a",
                     fontSize: 12,
                   }}
                   formatter={(v) => formatCurrency(Number(v))}
                 />
                 <Legend
-                  wrapperStyle={{ fontSize: 11, color: "#94a3b8" }}
+                  wrapperStyle={{ fontSize: 11, color: "#64748b" }}
                 />
                 <Bar dataKey="google" name="Google Ads" fill="#4285f4" radius={[3, 3, 0, 0]} />
                 <Bar dataKey="linkedin" name="LinkedIn Ads" fill="#0077b5" radius={[3, 3, 0, 0]} />
@@ -197,9 +197,9 @@ export default function DashboardPage() {
                       { label: "Convs", value: formatNumber(convs) },
                       { label: "ROAS", value: `${roas.toFixed(1)}x` },
                     ].map((m) => (
-                      <div key={m.label} className="bg-white/4 rounded-lg p-2 text-center">
+                      <div key={m.label} className="bg-slate-50 rounded-lg p-2 text-center">
                         <p className="text-xs text-slate-500">{m.label}</p>
-                        <p className="text-sm font-semibold text-white mt-0.5">{m.value}</p>
+                        <p className="text-sm font-semibold text-slate-900 mt-0.5">{m.value}</p>
                       </div>
                     ))}
                   </div>
@@ -225,12 +225,12 @@ export default function DashboardPage() {
             />
             <div className="space-y-2">
               {pendingActions.slice(0, 3).map((action) => (
-                <div key={action.id} className="flex items-start gap-3 p-3 rounded-lg bg-white/3 border border-white/6">
+                <div key={action.id} className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 border border-slate-200">
                   <div className={`w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 ${
                     action.impact === "High" ? "bg-blue-400" : action.impact === "Medium" ? "bg-amber-400" : "bg-slate-400"
                   }`} />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs text-white truncate">{action.description}</p>
+                    <p className="text-xs text-slate-900 truncate">{action.description}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <PlatformBadge platform={action.platform} />
                       <span className="text-[10px] text-emerald-400">{action.estimated_improvement}</span>
@@ -258,15 +258,15 @@ export default function DashboardPage() {
             />
             <div className="space-y-2">
               {MOCK_CAMPAIGNS.map((c) => (
-                <div key={c.id} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/3 transition-colors">
+                <div key={c.id} className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-slate-50 transition-colors">
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-white truncate">{c.name}</p>
+                    <p className="text-xs font-medium text-slate-900 truncate">{c.name}</p>
                     <div className="flex items-center gap-2 mt-0.5">
                       <PlatformBadge platform={c.platform} />
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs font-semibold text-white">{c.roas.toFixed(1)}x</p>
+                    <p className="text-xs font-semibold text-slate-900">{c.roas.toFixed(1)}x</p>
                     <p className="text-[10px] text-slate-500">ROAS</p>
                   </div>
                   <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${statusColor(c.status)}`}>
@@ -287,14 +287,14 @@ export default function DashboardPage() {
             { label: "Budget Planner", icon: DollarSign, href: "/budget", color: "#f59e0b" },
           ].map((action) => (
             <Link key={action.href} href={action.href}>
-              <div className="flex items-center gap-3 p-4 rounded-xl bg-white/4 border border-white/8 hover:bg-white/6 hover:border-white/15 transition-colors cursor-pointer">
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-50 border border-slate-200 hover:bg-slate-100 hover:border-slate-200 transition-colors cursor-pointer">
                 <div
                   className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
                   style={{ background: `${action.color}20` }}
                 >
                   <action.icon size={15} style={{ color: action.color }} />
                 </div>
-                <p className="text-xs font-medium text-slate-300">{action.label}</p>
+                <p className="text-xs font-medium text-slate-700">{action.label}</p>
               </div>
             </Link>
           ))}
@@ -303,3 +303,4 @@ export default function DashboardPage() {
     </div>
   );
 }
+

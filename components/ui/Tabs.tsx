@@ -25,7 +25,7 @@ export function Tabs({ tabs, defaultTab, onChange, className }: TabsProps) {
   }
 
   return (
-    <div className={cn("flex gap-1 bg-white/4 rounded-lg p-1 border border-white/8", className)}>
+    <div className={cn("flex gap-1 bg-slate-50 rounded-lg p-1 border border-slate-200", className)}>
       {tabs.map((t) => (
         <button
           key={t.id}
@@ -33,8 +33,8 @@ export function Tabs({ tabs, defaultTab, onChange, className }: TabsProps) {
           className={cn(
             "flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors",
             active === t.id
-              ? "bg-white/10 text-white"
-              : "text-slate-400 hover:text-slate-300 hover:bg-white/5"
+              ? "bg-slate-200 text-slate-900"
+              : "text-slate-400 hover:text-slate-700 hover:bg-slate-100"
           )}
         >
           {t.icon}

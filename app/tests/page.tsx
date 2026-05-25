@@ -96,12 +96,12 @@ export default function TestsPage() {
             { label: "Challenger Win Rate", value: `${winRate}%`, icon: Trophy, color: "#f59e0b" },
             { label: "Avg. Confidence", value: `${Math.round(TESTS.filter(t => t.status === "Completed").reduce((s, t) => s + t.confidence, 0) / completed)}%`, icon: TrendingUp, color: "#8b5cf6" },
           ].map((s) => (
-            <div key={s.label} className="bg-[#1c1c24] border border-white/8 rounded-xl p-4 flex items-center gap-3">
+            <div key={s.label} className="bg-white border border-slate-200 rounded-xl p-4 flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: `${s.color}20` }}>
                 <s.icon size={16} style={{ color: s.color }} />
               </div>
               <div>
-                <p className="text-xl font-bold text-white">{s.value}</p>
+                <p className="text-xl font-bold text-slate-900">{s.value}</p>
                 <p className="text-xs text-slate-500">{s.label}</p>
               </div>
             </div>
@@ -109,10 +109,10 @@ export default function TestsPage() {
         </div>
 
         {/* Filter */}
-        <div className="flex gap-1 bg-white/4 rounded-lg p-1 border border-white/8 w-fit">
+        <div className="flex gap-1 bg-slate-50 rounded-lg p-1 border border-slate-200 w-fit">
           {(["All", "Running", "Completed"] as const).map((f) => (
             <button key={f} onClick={() => setFilter(f)}
-              className={`px-4 py-1.5 rounded text-xs font-medium transition-colors ${filter === f ? "bg-white/10 text-white" : "text-slate-400 hover:text-slate-300"}`}>
+              className={`px-4 py-1.5 rounded text-xs font-medium transition-colors ${filter === f ? "bg-slate-200 text-slate-900" : "text-slate-400 hover:text-slate-700"}`}>
               {f}
             </button>
           ))}
@@ -124,12 +124,12 @@ export default function TestsPage() {
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <p className="text-sm font-semibold text-white truncate">{test.name}</p>
+                    <p className="text-sm font-semibold text-slate-900 truncate">{test.name}</p>
                     {test.winner && <Trophy size={13} className="text-amber-400 flex-shrink-0" />}
                   </div>
                   <div className="flex items-center gap-2">
                     <PlatformBadge platform={test.platform} />
-                    <span className="text-[10px] bg-white/8 text-slate-400 px-1.5 py-0.5 rounded">{test.type}</span>
+                    <span className="text-[10px] bg-slate-100 text-slate-400 px-1.5 py-0.5 rounded">{test.type}</span>
                     <span className={`text-[10px] px-1.5 py-0.5 rounded font-medium ${statusColor(test.status)}`}>{test.status}</span>
                   </div>
                 </div>
@@ -149,10 +149,10 @@ export default function TestsPage() {
                   const isWinner = (i === 0 && test.winner === "A") || (i === 1 && test.winner === "B");
                   const label = i === 0 ? "A" : "B";
                   return (
-                    <div key={i} className={`p-3 rounded-lg border ${isWinner ? "border-emerald-500/30 bg-emerald-500/8" : "border-white/8 bg-white/3"}`}>
+                    <div key={i} className={`p-3 rounded-lg border ${isWinner ? "border-emerald-500/30 bg-emerald-500/8" : "border-slate-200 bg-slate-50"}`}>
                       <div className="flex items-center gap-1.5 mb-2">
-                        <span className={`text-[10px] font-bold w-4 h-4 rounded flex items-center justify-center ${isWinner ? "bg-emerald-500 text-white" : "bg-white/10 text-slate-300"}`}>{label}</span>
-                        <span className="text-xs text-slate-300 truncate">{v.label}</span>
+                        <span className={`text-[10px] font-bold w-4 h-4 rounded flex items-center justify-center ${isWinner ? "bg-emerald-500 text-slate-900" : "bg-slate-200 text-slate-700"}`}>{label}</span>
+                        <span className="text-xs text-slate-700 truncate">{v.label}</span>
                         {isWinner && <Trophy size={10} className="text-emerald-400 flex-shrink-0" />}
                       </div>
                       <div className="grid grid-cols-2 gap-1">
@@ -164,7 +164,7 @@ export default function TestsPage() {
                         ].map((m) => (
                           <div key={m.label}>
                             <p className="text-[9px] text-slate-500">{m.label}</p>
-                            <p className="text-xs font-medium text-white">{m.value}</p>
+                            <p className="text-xs font-medium text-slate-900">{m.value}</p>
                           </div>
                         ))}
                       </div>
@@ -187,7 +187,7 @@ export default function TestsPage() {
                       <span className="text-[10px] text-slate-500">Statistical confidence</span>
                       <span className="text-[10px] text-slate-400">Need 95% to declare winner</span>
                     </div>
-                    <div className="w-full h-1.5 rounded-full bg-white/8">
+                    <div className="w-full h-1.5 rounded-full bg-slate-100">
                       <div className="h-full rounded-full transition-all"
                         style={{ width: `${test.confidence}%`, background: test.confidence >= 95 ? "#10b981" : test.confidence >= 80 ? "#4285f4" : "#f59e0b" }} />
                     </div>
@@ -204,10 +204,10 @@ export default function TestsPage() {
         </div>
 
         {/* Learning Library CTA */}
-        <Card className="border-dashed border-white/15 bg-transparent">
+        <Card className="border-dashed border-slate-200 bg-transparent">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-semibold text-white">Learning Library</p>
+              <p className="text-sm font-semibold text-slate-900">Learning Library</p>
               <p className="text-xs text-slate-400 mt-0.5">All test results are stored for future creative and strategy decisions</p>
             </div>
             <Button variant="outline" size="sm">

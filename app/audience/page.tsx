@@ -102,7 +102,7 @@ Return ONLY valid JSON:
                 <div className="grid grid-cols-2 gap-2">
                   {PLATFORMS.map((p) => (
                     <button key={p.id} onClick={() => setPlatform(p.id)}
-                      className={`p-2.5 rounded-lg border text-xs font-medium transition-colors ${platform === p.id ? "border-blue-500/40 bg-blue-500/10 text-blue-400" : "border-white/8 text-slate-400 hover:border-white/15"}`}>
+                      className={`p-2.5 rounded-lg border text-xs font-medium transition-colors ${platform === p.id ? "border-blue-500/40 bg-blue-500/10 text-blue-400" : "border-slate-200 text-slate-400 hover:border-slate-200"}`}>
                       {p.name}
                     </button>
                   ))}
@@ -121,7 +121,7 @@ Return ONLY valid JSON:
           <div className="lg:col-span-2 space-y-5">
             {!result && !loading && (
               <Card className="flex flex-col items-center justify-center py-20 text-center">
-                <Users size={32} className="text-slate-600 mb-3" />
+                <Users size={32} className="text-slate-500 mb-3" />
                 <p className="text-sm text-slate-400">Define your product and build an AI audience strategy</p>
               </Card>
             )}
@@ -135,13 +135,13 @@ Return ONLY valid JSON:
               <>
                 <Card>
                   <CardHeader title="Primary Audience" subtitle={`Est. size: ${result.primary_audience.estimated_size}`} />
-                  <p className="text-xs text-slate-300 mb-4">{result.primary_audience.description}</p>
+                  <p className="text-xs text-slate-700 mb-4">{result.primary_audience.description}</p>
                   <div className="grid grid-cols-2 gap-2">
                     {Object.entries(result.primary_audience.demographics ?? {}).map(([k, v]) => (
                       v && (
-                        <div key={k} className="p-2.5 rounded-lg bg-white/4 border border-white/6">
+                        <div key={k} className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
                           <p className="text-[10px] text-slate-500 capitalize mb-1">{k.replace(/_/g, " ")}</p>
-                          <p className="text-xs text-slate-300">{Array.isArray(v) ? v.join(", ") : String(v)}</p>
+                          <p className="text-xs text-slate-700">{Array.isArray(v) ? v.join(", ") : String(v)}</p>
                         </div>
                       )
                     ))}
@@ -152,10 +152,10 @@ Return ONLY valid JSON:
                   <CardHeader title="Secondary Audiences" subtitle={`${result.secondary_audiences.length} segments`} />
                   <div className="space-y-3">
                     {result.secondary_audiences.map((a, i) => (
-                      <div key={i} className="p-3 rounded-lg bg-white/4 border border-white/6">
+                      <div key={i} className="p-3 rounded-lg bg-slate-50 border border-slate-200">
                         <div className="flex items-center gap-2 mb-1">
                           <Target size={12} className="text-blue-400" />
-                          <p className="text-xs font-medium text-white">{a.name}</p>
+                          <p className="text-xs font-medium text-slate-900">{a.name}</p>
                           <span className="ml-auto text-[10px] text-blue-400 bg-blue-500/15 px-1.5 py-0.5 rounded">{a.type}</span>
                         </div>
                         <p className="text-xs text-slate-400">{a.description}</p>
@@ -185,7 +185,7 @@ Return ONLY valid JSON:
                     <CardHeader title="Audience Insights" />
                     <ul className="space-y-1.5">
                       {result.audience_insights.slice(0, 4).map((ins, i) => (
-                        <li key={i} className="text-xs text-slate-300 flex gap-2">
+                        <li key={i} className="text-xs text-slate-700 flex gap-2">
                           <Sparkles size={11} className="text-blue-400 mt-0.5 flex-shrink-0" /> {ins}
                         </li>
                       ))}
@@ -196,11 +196,11 @@ Return ONLY valid JSON:
                 <div className="grid grid-cols-1 gap-4">
                   <Card>
                     <CardHeader title="Lookalike Strategy" />
-                    <p className="text-xs text-slate-300">{result.lookalike_strategy}</p>
+                    <p className="text-xs text-slate-700">{result.lookalike_strategy}</p>
                   </Card>
                   <Card>
                     <CardHeader title="Remarketing Strategy" />
-                    <p className="text-xs text-slate-300">{result.remarketing_strategy}</p>
+                    <p className="text-xs text-slate-700">{result.remarketing_strategy}</p>
                   </Card>
                 </div>
               </>

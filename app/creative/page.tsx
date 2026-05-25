@@ -135,7 +135,7 @@ Return ONLY valid JSON:
                       key={p.id}
                       onClick={() => { setPlatform(p.id); setFormat(p.formats[0]); }}
                       className={`p-2.5 rounded-lg border text-xs font-medium transition-colors ${
-                        platform === p.id ? "border-blue-500/40 bg-blue-500/10 text-blue-400" : "border-white/8 text-slate-400 hover:border-white/15"
+                        platform === p.id ? "border-blue-500/40 bg-blue-500/10 text-blue-400" : "border-slate-200 text-slate-400 hover:border-slate-200"
                       }`}
                     >
                       {p.name}
@@ -159,7 +159,7 @@ Return ONLY valid JSON:
                       key={t}
                       onClick={() => setTone(t)}
                       className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
-                        tone === t ? "bg-blue-600 text-white" : "bg-white/5 text-slate-400 hover:bg-white/8"
+                        tone === t ? "bg-blue-600 text-slate-900" : "bg-slate-100 text-slate-400 hover:bg-slate-100"
                       }`}
                     >
                       {t}
@@ -207,7 +207,7 @@ Return ONLY valid JSON:
           <div className="lg:col-span-2 space-y-5">
             {!result && !loading && (
               <Card className="flex flex-col items-center justify-center py-20 text-center">
-                <Sparkles size={32} className="text-slate-600 mb-3" />
+                <Sparkles size={32} className="text-slate-500 mb-3" />
                 <p className="text-sm text-slate-400">Configure your campaign and generate AI copy</p>
               </Card>
             )}
@@ -227,7 +227,7 @@ Return ONLY valid JSON:
                     <Card key={i}>
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-white">{v.label}</span>
+                          <span className="text-xs font-bold text-slate-900">{v.label}</span>
                           <div className="flex items-center gap-1">
                             <TrendingUp size={11} className="text-blue-400" />
                             <span className="text-xs text-blue-400 font-medium">Score: {v.score}/100</span>
@@ -244,17 +244,17 @@ Return ONLY valid JSON:
 
                       {/* Ad preview */}
                       {platform === "google" ? (
-                        <div className="p-4 rounded-lg bg-white/4 border border-white/8 space-y-1">
+                        <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
                           <p className="text-xs text-slate-500">ads · example.com</p>
                           <p className="text-sm font-medium text-blue-400">{v.headline_1} | {v.headline_2}{v.headline_3 ? ` | ${v.headline_3}` : ""}</p>
-                          <p className="text-xs text-slate-300">{v.description_1}{v.description_2 ? ` ${v.description_2}` : ""}</p>
+                          <p className="text-xs text-slate-700">{v.description_1}{v.description_2 ? ` ${v.description_2}` : ""}</p>
                         </div>
                       ) : (
-                        <div className="p-4 rounded-lg bg-white/4 border border-white/8">
-                          <p className="text-sm font-semibold text-white mb-1">{v.headline_1}</p>
-                          {v.headline_2 && <p className="text-sm text-slate-300 mb-2">{v.headline_2}</p>}
+                        <div className="p-4 rounded-lg bg-slate-50 border border-slate-200">
+                          <p className="text-sm font-semibold text-slate-900 mb-1">{v.headline_1}</p>
+                          {v.headline_2 && <p className="text-sm text-slate-700 mb-2">{v.headline_2}</p>}
                           <p className="text-xs text-slate-400">{v.description_1}</p>
-                          <button className="mt-3 px-4 py-1.5 rounded bg-sky-600 text-white text-xs font-medium">{v.cta}</button>
+                          <button className="mt-3 px-4 py-1.5 rounded bg-sky-600 text-slate-900 text-xs font-medium">{v.cta}</button>
                         </div>
                       )}
 
@@ -284,7 +284,7 @@ Return ONLY valid JSON:
 
                 <Card>
                   <CardHeader title="A/B Test Recommendation" />
-                  <p className="text-xs text-slate-300">{result.ab_test_recommendation}</p>
+                  <p className="text-xs text-slate-700">{result.ab_test_recommendation}</p>
                 </Card>
 
                 {result.platform_tips?.length > 0 && (
@@ -292,7 +292,7 @@ Return ONLY valid JSON:
                     <CardHeader title="Platform Tips" />
                     <ul className="space-y-1.5">
                       {result.platform_tips.map((tip, i) => (
-                        <li key={i} className="flex items-start gap-2 text-xs text-slate-300">
+                        <li key={i} className="flex items-start gap-2 text-xs text-slate-700">
                           <span className="text-blue-400 mt-0.5">→</span> {tip}
                         </li>
                       ))}

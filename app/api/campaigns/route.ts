@@ -7,38 +7,46 @@ export async function GET(req: NextRequest) {
     ""
   ).replace(/-/g, "");
 
-  const developerToken =
-    process.env.GOOGLE_ADS_DEVELOPER_TOKEN || "";
+  const developerToken = process.env.GOOGLE_ADS_DEVELOPER_TOKEN || "";
   const apiKey = process.env.GOOGLE_API_KEY || "";
 
-  if (!accountId || !developerToken) {
-    return NextResponse.json({ source: "mock" });
+  if (!accountId) {
+    return NextResponse.json({
+      source: "mock",
+      error: "No Ad Account ID set. Enter it in the sidebar to connect.",
+    });
   }
 
-  try {
-    // Google Ads Query Language (GAQL) — fetch campaigns with performance metrics
-    const gaql = `
-      SELECT
-        campaign.id,
-        campaign.name,
-        campaign.status,
-        campaign.advertising_channel_type,
-        campaign_budget.amount_micros,
-        metrics.cost_micros,
-        metrics.impressions,
-        metrics.clicks,
-        metrics.ctr,
-        metrics.average_cpc,
-        metrics.conversions,
-        metrics.cost_per_conversion,
-        metrics.all_conversions_value,
-        metrics.search_impression_share
-      FROM campaign
-      WHERE segments.date DURING LAST_30_DAYS
-      ORDER BY metrics.cost_micros DESC
-      LIMIT 50
-    `;
+  if (!developerToken) {
+    return NextResponse.json({
+      source: "mock",
+      error:
+        "GOOGLE_ADS_DEVELOPER_TOKEN is missing. The Google API key (AIzaSy…) is a Cloud API key — it cannot access Google Ads data. You need a separate Developer Token from Google Ads → Tools → API Center.",
+    });
+  }
 
+  const gaql = `
+    SELECT
+      campaign.id,
+      campaign.name,
+      campaign.status,
+      campaign.advertising_channel_type,
+      campaign_budget.amount_micros,
+      metrics.cost_micros,
+      metrics.impressions,
+      metrics.clicks,
+      metrics.ctr,
+      metrics.average_cpc,
+      metrics.conversions,
+      metrics.cost_per_conversion,
+      metrics.all_conversions_value
+    FROM campaign
+    WHERE segments.date DURING LAST_30_DAYS
+    ORDER BY metrics.cost_micros DESC
+    LIMIT 50
+  `;
+
+  try {
     const res = await fetch(
       `https://googleads.googleapis.com/v17/customers/${accountId}/googleAds:search`,
       {
@@ -54,7 +62,11 @@ export async function GET(req: NextRequest) {
 
     if (!res.ok) {
       const err = await res.json();
-      return NextResponse.json({ source: "mock", error: err?.error?.message || "Google Ads API error" });
+      const message =
+        err?.error?.details?.[0]?.errors?.[0]?.message ||
+        err?.error?.message ||
+        `Google Ads API error (${res.status})`;
+      return NextResponse.json({ source: "mock", error: message });
     }
 
     const data = await res.json();
@@ -64,12 +76,10 @@ export async function GET(req: NextRequest) {
       const c = row.campaign;
       const b = row.campaignBudget;
       const m = row.metrics;
-
       const spend = (m?.costMicros || 0) / 1_000_000;
       const budgetDaily = (b?.amountMicros || 0) / 1_000_000;
       const conversions = m?.conversions || 0;
       const convValue = m?.allConversionsValue || 0;
-
       return {
         id: c?.id || `r${i}`,
         platform: "google",

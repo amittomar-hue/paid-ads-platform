@@ -1,8 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const googleEnv = !!(process.env.GOOGLE_API_KEY || process.env.GOOGLE_ADS_DEVELOPER_TOKEN);
+  const linkedinEnv = !!(process.env.LINKEDIN_CLIENT_ID && process.env.LINKEDIN_ACCESS_TOKEN);
+
+  const googleCookie = req.cookies.get("google_api_key")?.value;
+  const linkedinCookie = req.cookies.get("linkedin_api_key")?.value;
+
   return NextResponse.json({
-    google: !!(process.env.GOOGLE_ADS_DEVELOPER_TOKEN && process.env.GOOGLE_ADS_CLIENT_ID),
-    linkedin: !!(process.env.LINKEDIN_CLIENT_ID && process.env.LINKEDIN_ACCESS_TOKEN),
+    google: googleEnv || !!googleCookie,
+    linkedin: linkedinEnv || !!linkedinCookie,
   });
 }

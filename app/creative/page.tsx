@@ -5,7 +5,7 @@ import { TopBar } from "@/components/layout/TopBar";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input, Textarea, Select } from "@/components/ui/Input";
-import { Sparkles, Loader2, Copy, CheckCheck, TrendingUp } from "lucide-react";
+import { Sparkles, Loader2, Copy, CheckCheck, TrendingUp, FileText, CheckCircle2 } from "lucide-react";
 
 const PLATFORMS = [
   {
@@ -21,6 +21,15 @@ const PLATFORMS = [
 ];
 
 const TONES = ["Professional", "Conversational", "Urgent", "Bold", "Witty", "Empathetic"];
+
+const LEAD_GEN_STEPS = [
+  { step: "Form Creation", detail: "AI builds LinkedIn Lead Gen Form from campaign objective. Fields auto-mapped: First Name, Last Name, Company, Job Title, Email, Phone (optional)." },
+  { step: "Progressive Profiling", detail: "Return visitors shown shorter forms. Completed fields pre-filled from LinkedIn profile data. Max 3 new fields per return visit." },
+  { step: "CRM Sync", detail: "Submissions pushed to CRM via webhook within 60 seconds. Field mapping: LinkedIn → CRM schema auto-detected. Duplicate detection via email hash." },
+  { step: "Immediate Follow-Up", detail: "Trigger nurture email within 5 minutes of submission. Assign to sales rep based on territory/ICP score. Log touchpoint in CRM timeline." },
+  { step: "Lead Scoring", detail: "Score submitted leads 0–100 using job title, company size, industry match vs. ICP. MQL threshold: ≥ 65. Auto-route hot leads (≥ 80) to SDR queue." },
+  { step: "Performance Loop", detail: "A/B test form field length vs. conversion rate weekly. Pause underperforming forms (< 2% CVR after 500 impressions). Surface winning variant." },
+];
 
 interface AdVariant {
   label: string;
@@ -205,6 +214,31 @@ Return ONLY valid JSON:
 
           {/* Results */}
           <div className="lg:col-span-2 space-y-5">
+            {platform === "linkedin" && (
+              <Card>
+                <div className="flex items-center gap-2 mb-4">
+                  <FileText size={15} className="text-sky-500" />
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-900">Lead Gen Form Automation (§5.5)</h3>
+                    <p className="text-xs text-slate-500 mt-0.5">LinkedIn Lead Gen Forms — end-to-end automation pipeline</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  {LEAD_GEN_STEPS.map((s, i) => (
+                    <div key={i} className="flex gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100">
+                      <div className="w-5 h-5 rounded-full bg-sky-500/15 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <CheckCircle2 size={11} className="text-sky-500" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-semibold text-slate-800">{s.step}</p>
+                        <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">{s.detail}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            )}
+
             {!result && !loading && (
               <Card className="flex flex-col items-center justify-center py-20 text-center">
                 <Sparkles size={32} className="text-slate-500 mb-3" />

@@ -5,7 +5,7 @@ import { TopBar } from "@/components/layout/TopBar";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input, Select } from "@/components/ui/Input";
-import { Sparkles, Loader2, DollarSign, ArrowRightLeft, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
+import { Sparkles, Loader2, DollarSign, ArrowRightLeft, AlertTriangle, CheckCircle, XCircle, Gauge, Zap, Clock, ShieldAlert, CalendarDays } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell
 } from "recharts";
@@ -111,6 +111,27 @@ Return ONLY valid JSON:
       <TopBar title="Budget Intelligence" subtitle="AI-powered budget allocation, pacing strategy, and cross-channel reallocation" />
 
       <div className="flex-1 p-6 overflow-y-auto space-y-5">
+
+        {/* §8.2 Pacing Engine */}
+        <div className="grid grid-cols-5 gap-3">
+          {[
+            { mode: "Standard", icon: Gauge, color: "#4285f4", desc: "Even distribution across day. Adjusts hourly targets based on actual spend.", active: true },
+            { mode: "Performance", icon: Zap, color: "#10b981", desc: "Front-loads budget during high-conversion hours from 30-day historical data.", active: false },
+            { mode: "End-of-Month", icon: Clock, color: "#f59e0b", desc: "Accelerates spend when 20% budget remains with 5 days left.", active: false },
+            { mode: "Emergency Brake", icon: ShieldAlert, color: "#ef4444", desc: "Throttles all campaigns if spend rate projects to exceed cap by > 5%.", active: false },
+            { mode: "Flight-Based", icon: CalendarDays, color: "#8b5cf6", desc: "Paces across fixed start/end dates, adjusting daily based on remaining budget.", active: false },
+          ].map((p) => (
+            <div key={p.mode} className={`p-3 rounded-xl border text-center ${p.active ? "border-blue-200 bg-blue-50" : "bg-white border-slate-200"}`}>
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center mx-auto mb-2" style={{ background: `${p.color}20` }}>
+                <p.icon size={15} style={{ color: p.color }} />
+              </div>
+              <p className={`text-xs font-semibold mb-1 ${p.active ? "text-blue-700" : "text-slate-700"}`}>{p.mode}</p>
+              {p.active && <span className="text-[9px] bg-blue-600 text-slate-900 px-1.5 py-0.5 rounded font-medium">ACTIVE</span>}
+              <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">{p.desc}</p>
+            </div>
+          ))}
+        </div>
+
         {/* Cross-Channel Reallocation Alert (Section 8.3) */}
         {!reallocationDismissed && !reallocationApproved && (
           <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/8">

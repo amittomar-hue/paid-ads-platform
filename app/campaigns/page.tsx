@@ -3,14 +3,28 @@
 import { TopBar } from "@/components/layout/TopBar";
 import { Button } from "@/components/ui/Button";
 import { Badge, PlatformBadge } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
+import { Card, CardHeader } from "@/components/ui/Card";
 import { MOCK_CAMPAIGNS } from "@/lib/mock-data";
 import { formatCurrency, formatNumber, formatPct, statusColor } from "@/lib/utils";
-import { Plus, Search, Filter, TrendingUp, TrendingDown } from "lucide-react";
+import { Plus, Search, TrendingUp, TrendingDown, CheckCircle, Link2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
+const AD_EXTENSIONS = [
+  { type: "Sitelink Extensions", action: "Auto-generate from top-traffic pages. Test 8 variants, surface 4 best performers.", status: "active", count: 8 },
+  { type: "Callout Extensions", action: "Generate USP statements from brand guidelines. Rotate 10 callouts, keep 4 top CTR.", status: "active", count: 10 },
+  { type: "Structured Snippets", action: "Auto-populate from product catalogue. Headers matched to business category.", status: "active", count: 6 },
+  { type: "Call Extensions", action: "Track call conversions. Pause outside business hours automatically.", status: "active", count: 1 },
+  { type: "Location Extensions", action: "Link to Google Business Profile. Enable location bid adjustments.", status: "active", count: 1 },
+  { type: "Price Extensions", action: "Populate from product feed. Auto-update prices daily via feed sync.", status: "inactive", count: 0 },
+  { type: "Promotion Extensions", action: "Activate during sale periods (calendar-driven). Auto-expire on end date.", status: "inactive", count: 0 },
+  { type: "Image Extensions", action: "Upload product images from catalogue. Rotate and test click rates.", status: "active", count: 12 },
+  { type: "Lead Form Extensions", action: "Create Google Lead Forms for lead-gen campaigns. Sync submissions to CRM.", status: "active", count: 3 },
+  { type: "App Extensions", action: "Link to App Store / Play Store for app campaigns.", status: "inactive", count: 0 },
+];
+
 export default function CampaignsPage() {
+  const [tab, setTab] = useState<"Campaigns" | "Extensions">("Campaigns");
   const [search, setSearch] = useState("");
   const [platformFilter, setPlatformFilter] = useState<"all" | "google" | "linkedin">("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -37,6 +51,52 @@ export default function CampaignsPage() {
       />
 
       <div className="flex-1 p-6 space-y-5 overflow-y-auto">
+        {/* Tab switcher */}
+        <div className="flex gap-1 bg-slate-100 rounded-lg p-1 border border-slate-200 w-fit">
+          {(["Campaigns", "Extensions"] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`px-4 py-1.5 rounded text-xs font-medium transition-colors ${tab === t ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+            >
+              {t}
+            </button>
+          ))}
+        </div>
+
+        {tab === "Extensions" && (
+          <div className="space-y-4">
+            <Card className="p-4">
+              <div className="flex items-center gap-2 mb-4">
+                <Link2 size={15} className="text-blue-500" />
+                <div>
+                  <h3 className="text-sm font-semibold text-slate-900">Ad Extensions (§4.6)</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">Automated extension management across all active campaigns</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {AD_EXTENSIONS.map((ext) => (
+                  <div key={ext.type} className={`p-4 rounded-xl border ${ext.status === "active" ? "bg-white border-slate-200" : "bg-slate-50 border-slate-100 opacity-70"}`}>
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <p className="text-xs font-semibold text-slate-900">{ext.type}</p>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {ext.count > 0 && (
+                          <span className="text-[10px] font-medium text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded">{ext.count}</span>
+                        )}
+                        <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded ${ext.status === "active" ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"}`}>
+                          {ext.status === "active" ? "Active" : "Inactive"}
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">{ext.action}</p>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {tab === "Campaigns" && <>
         {/* Filters */}
         <Card className="p-4">
           <div className="flex flex-wrap items-center gap-3">
@@ -158,6 +218,7 @@ export default function CampaignsPage() {
             <div className="text-center py-12 text-slate-500 text-sm">No campaigns match your filters.</div>
           )}
         </Card>
+        </>}
       </div>
     </div>
   );

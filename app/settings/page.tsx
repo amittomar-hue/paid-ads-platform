@@ -5,9 +5,33 @@ import { TopBar } from "@/components/layout/TopBar";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { CheckCircle, Bell, Shield, Calendar, Plus, Trash2 } from "lucide-react";
+import { CheckCircle, Bell, Shield, Calendar, Plus, Trash2, Target } from "lucide-react";
 
-const TABS = ["API Connections", "AI Settings", "Notifications", "Scheduled Reports", "Security", "Deploy Guide"];
+const TABS = ["API Connections", "AI Settings", "Notifications", "Scheduled Reports", "Security", "KPIs & SLAs", "Deploy Guide"];
+
+const KPI_TABLE = [
+  { metric: "CTR (Search)", target: "≥ 3.5%", alert: "< 2%", cadence: "Daily" },
+  { metric: "CTR (Display)", target: "≥ 0.35%", alert: "< 0.2%", cadence: "Daily" },
+  { metric: "Quality Score", target: "≥ 7/10", alert: "< 5/10", cadence: "Weekly" },
+  { metric: "Conversion Rate", target: "≥ 3%", alert: "< 1.5%", cadence: "Daily" },
+  { metric: "CPA vs. Target", target: "≤ target CPA", alert: "> 120% of target", cadence: "Daily" },
+  { metric: "ROAS", target: "≥ 400%", alert: "< 250%", cadence: "Daily" },
+  { metric: "Impression Share Lost (Budget)", target: "< 10%", alert: "> 20%", cadence: "Weekly" },
+  { metric: "Ad Relevance", target: "Above Average", alert: "Below Average", cadence: "Weekly" },
+  { metric: "Landing Page Experience", target: "Above Average", alert: "Below Average", cadence: "Weekly" },
+  { metric: "Budget Utilisation", target: "90–100%", alert: "< 80% or > 105%", cadence: "Daily" },
+];
+
+const SLA_TABLE = [
+  { action: "New campaign live", sla: "< 48 hours from brief to active", owner: "AI + Human review" },
+  { action: "Bid adjustment after signal", sla: "< 15 minutes", owner: "Automated" },
+  { action: "Anomaly alert → response", sla: "< 30 minutes (critical)", owner: "On-call" },
+  { action: "A/B test rotation", sla: "Every 7 days (min 1,000 impressions)", owner: "Automated" },
+  { action: "Negative keyword update", sla: "Weekly review; critical within 24 hours", owner: "AI + Human" },
+  { action: "Ad copy refresh", sla: "Every 30 days or when CTR drops > 15%", owner: "Creative Engine" },
+  { action: "Budget reallocation", sla: "Daily at 06:00 UTC", owner: "Pacing Engine" },
+  { action: "Monthly reporting", sla: "Within 3 business days of month-end", owner: "Automated + PM" },
+];
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("API Connections");
@@ -233,6 +257,61 @@ export default function SettingsPage() {
                 ))}
               </div>
             </Card>
+          )}
+
+          {activeTab === "KPIs & SLAs" && (
+            <div className="space-y-4">
+              <Card>
+                <div className="flex items-center gap-2 mb-4">
+                  <Target size={15} className="text-blue-500" />
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-900">KPI Targets & Alert Thresholds (§15)</h3>
+                    <p className="text-xs text-slate-500 mt-0.5">Performance benchmarks monitored daily and weekly</p>
+                  </div>
+                </div>
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="border-b border-slate-200">
+                      {["Metric", "Target", "Alert Threshold", "Cadence"].map((h) => (
+                        <th key={h} className="text-left py-2 pr-4 text-slate-500 font-medium">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {KPI_TABLE.map((row, i) => (
+                      <tr key={i} className="border-b border-slate-100">
+                        <td className="py-2.5 pr-4 font-medium text-slate-800">{row.metric}</td>
+                        <td className="py-2.5 pr-4 text-emerald-600 font-medium">{row.target}</td>
+                        <td className="py-2.5 pr-4 text-red-500">{row.alert}</td>
+                        <td className="py-2.5 text-slate-500">{row.cadence}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </Card>
+
+              <Card>
+                <div className="flex items-center gap-2 mb-4">
+                  <Shield size={15} className="text-purple-500" />
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-900">Service Level Agreements</h3>
+                    <p className="text-xs text-slate-500 mt-0.5">Operational SLAs for all platform actions</p>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  {SLA_TABLE.map((row, i) => (
+                    <div key={i} className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100">
+                      <CheckCircle size={13} className="text-blue-400 mt-0.5 flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold text-slate-800">{row.action}</p>
+                        <p className="text-[11px] text-slate-500 mt-0.5">{row.sla}</p>
+                      </div>
+                      <span className="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded flex-shrink-0">{row.owner}</span>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </div>
           )}
 
           {activeTab === "Deploy Guide" && (

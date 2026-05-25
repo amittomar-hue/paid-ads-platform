@@ -9,8 +9,26 @@ import { MOCK_CAMPAIGNS, MOCK_OPTIMIZATIONS } from "@/lib/mock-data";
 import { riskColor } from "@/lib/utils";
 import {
   Zap, Loader2, CheckCircle, XCircle, Clock, ShieldAlert,
-  TrendingUp, AlertTriangle, Info, RotateCcw, Users
+  TrendingUp, AlertTriangle, Info, RotateCcw, Users, Brain, Target
 } from "lucide-react";
+
+const PREDICTIVE_MODELS = [
+  { name: "Conversion Probability", target: "P(conversion) per query/impression", algo: "Gradient Boosted Trees", inputs: "Keyword, match type, device, hour, day, geo, audience, QS, historical CVR", status: "active", accuracy: 87 },
+  { name: "CPA Forecast", target: "Expected CPA for next 7/30 days", algo: "LSTM Time-Series", inputs: "Historical CPA, seasonality index, budget change history, bid changes", status: "active", accuracy: 82 },
+  { name: "Budget Exhaustion", target: "Time to budget depletion", algo: "Linear Regression", inputs: "Current spend rate, remaining budget, day-of-month", status: "active", accuracy: 94 },
+  { name: "Creative Fatigue", target: "Time until ad performance degrades", algo: "Survival Analysis", inputs: "Impression frequency, CTR trend, engagement rate trend, days since launch", status: "active", accuracy: 76 },
+  { name: "Audience Saturation", target: "Audience overlap and reach ceiling", algo: "Combinatorial Model", inputs: "Audience size, frequency cap, daily reach, impression data", status: "training", accuracy: 71 },
+  { name: "Keyword Opportunity", target: "New keywords ranked by projected ROI", algo: "NLP + Auction Model", inputs: "Search volume, competition, historical QS, page speed, landing page relevance", status: "active", accuracy: 79 },
+];
+
+const BIDDING_LOGIC = [
+  { condition: "< 20 conversions in past 30 days", strategy: "Enhanced CPC → Manual CPC with automated bid adjustments" },
+  { condition: "20–50 conversions in past 30 days", strategy: "Target CPA (conservative initial = historical CPA + 20%)" },
+  { condition: "50+ conversions, known CPA target", strategy: "Target CPA or Target ROAS (Smart Bidding fully enabled)" },
+  { condition: "eCommerce with product revenue data", strategy: "Target ROAS — maximise revenue relative to spend" },
+  { condition: "Awareness / reach goal", strategy: "Target Impression Share (top of page, target 80%)" },
+  { condition: "Traffic maximisation (fixed budget)", strategy: "Maximise Clicks with capped Max CPC" },
+];
 
 interface OptResult {
   overall_score: number;
@@ -296,6 +314,51 @@ Return JSON:
                 </Card>
               </>
             )}
+
+            {/* §6.4 Predictive Performance Models — always visible */}
+            <Card>
+              <CardHeader title="Predictive ML Models" subtitle="6 models running continuously" action={<span className="text-[10px] text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded font-medium">Live</span>} />
+              <div className="space-y-2">
+                {PREDICTIVE_MODELS.map((m) => (
+                  <div key={m.name} className="p-3 rounded-lg bg-slate-50 border border-slate-100">
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-1.5">
+                        <Brain size={11} className={m.status === "active" ? "text-emerald-400" : "text-amber-400"} />
+                        <p className="text-xs font-medium text-slate-900">{m.name}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[9px] px-1.5 py-0.5 rounded font-medium ${m.status === "active" ? "bg-emerald-500/15 text-emerald-500" : "bg-amber-500/15 text-amber-400"}`}>{m.status === "active" ? "Active" : "Training"}</span>
+                        <span className="text-[10px] text-slate-500">{m.accuracy}% acc.</span>
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-slate-500 mb-1">{m.target}</p>
+                    <div className="w-full h-1 bg-slate-200 rounded-full">
+                      <div className="h-full rounded-full bg-blue-400" style={{ width: `${m.accuracy}%` }} />
+                    </div>
+                    <p className="text-[9px] text-slate-400 mt-1">{m.algo} · {m.inputs.substring(0, 60)}…</p>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            {/* §4.4 Bidding Strategy Selection Logic — always visible */}
+            <Card>
+              <CardHeader title="Bidding Strategy Selection" subtitle="Auto-recommended based on conversion history" />
+              <div className="space-y-1.5">
+                {BIDDING_LOGIC.map((b, i) => (
+                  <div key={i} className={`p-2.5 rounded-lg ${i === 1 ? "bg-blue-50 border border-blue-200" : "bg-slate-50 border border-slate-100"}`}>
+                    <div className="flex items-start gap-2">
+                      <Target size={10} className={i === 1 ? "text-blue-500 mt-0.5 flex-shrink-0" : "text-slate-400 mt-0.5 flex-shrink-0"} />
+                      <div>
+                        <p className={`text-[10px] font-medium mb-0.5 ${i === 1 ? "text-blue-700" : "text-slate-500"}`}>{b.condition}</p>
+                        <p className={`text-xs ${i === 1 ? "text-blue-900 font-medium" : "text-slate-700"}`}>{b.strategy}</p>
+                      </div>
+                      {i === 1 && <span className="ml-auto text-[9px] bg-blue-600 text-slate-900 px-1.5 py-0.5 rounded font-medium flex-shrink-0">Current</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
           </div>
         </div>
       </div>

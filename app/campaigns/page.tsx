@@ -7,9 +7,70 @@ import { PlatformBadge } from "@/components/ui/Badge";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { MOCK_CAMPAIGNS } from "@/lib/mock-data";
 import { formatCurrency, formatNumber, formatPct, statusColor } from "@/lib/utils";
-import { Plus, Search, TrendingUp, TrendingDown, Link2, AlertCircle, RefreshCw, Loader2 } from "lucide-react";
+import { Plus, Search, TrendingUp, TrendingDown, Link2, AlertCircle, RefreshCw, Loader2, Upload, X, FileSpreadsheet } from "lucide-react";
 import Link from "next/link";
+import { useRef } from "react";
 import type { Campaign } from "@/lib/types";
+
+function parseGoogleAdsCsv(text: string): Campaign[] {
+  const lines = text.split("\n").map((l) => l.trim()).filter(Boolean);
+  // Find the header row — Google Ads CSVs have metadata rows at the top
+  const headerIdx = lines.findIndex((l) =>
+    l.toLowerCase().includes("campaign") && (l.toLowerCase().includes("cost") || l.toLowerCase().includes("impressions") || l.toLowerCase().includes("clicks"))
+  );
+  if (headerIdx === -1) return [];
+
+  const headers = lines[headerIdx].split(",").map((h) => h.replace(/"/g, "").trim().toLowerCase());
+
+  const col = (row: string[], name: string) => {
+    const idx = headers.findIndex((h) => h.includes(name));
+    return idx >= 0 ? row[idx]?.replace(/"/g, "").replace(/,/g, "").trim() : "";
+  };
+
+  const toNum = (v: string) => parseFloat(v.replace(/[^0-9.-]/g, "")) || 0;
+
+  const rows = lines.slice(headerIdx + 1).filter((l) => !l.startsWith("Total") && !l.startsWith('"Total'));
+
+  return rows.map((line, i) => {
+    const row = line.split(",");
+    const name = col(row, "campaign") || `Campaign ${i + 1}`;
+    const statusRaw = col(row, "status") || col(row, "campaign state") || "active";
+    const status: Campaign["status"] =
+      statusRaw.toLowerCase().includes("enabl") || statusRaw.toLowerCase() === "active" ? "Active"
+      : statusRaw.toLowerCase().includes("paus") ? "Paused" : "Draft";
+
+    const spend = toNum(col(row, "cost") || col(row, "spend"));
+    const impressions = toNum(col(row, "impr"));
+    const clicks = toNum(col(row, "click"));
+    const ctr = toNum(col(row, "ctr")) || (impressions > 0 ? (clicks / impressions) * 100 : 0);
+    const conversions = toNum(col(row, "conv"));
+    const cpa = toNum(col(row, "cost / conv") || col(row, "cpa")) || (conversions > 0 ? spend / conversions : 0);
+    const convValue = toNum(col(row, "conv. value") || col(row, "value"));
+    const roas = toNum(col(row, "roas")) || (spend > 0 && convValue > 0 ? convValue / spend : 0);
+    const budget = toNum(col(row, "budget") || col(row, "daily budget"));
+
+    return {
+      id: `csv_${i}`,
+      platform: "google" as const,
+      name,
+      status,
+      type: col(row, "campaign type") || "Search",
+      objective: "Conversions",
+      budget_daily: budget,
+      budget_total: budget * 30,
+      spend,
+      impressions,
+      clicks,
+      ctr,
+      cpc: clicks > 0 ? spend / clicks : 0,
+      conversions,
+      cpa,
+      roas,
+      quality_score: 70,
+      start_date: new Date().toISOString().split("T")[0],
+    };
+  }).filter((c) => c.name && c.impressions + c.clicks + c.spend > 0);
+}
 
 const AD_EXTENSIONS = [
   { type: "Sitelink Extensions", action: "Auto-generate from top-traffic pages. Test 8 variants, surface 4 best performers.", status: "active", count: 8 },
@@ -30,8 +91,11 @@ export default function CampaignsPage() {
   const [platformFilter, setPlatformFilter] = useState<"all" | "google" | "linkedin">("all");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [campaigns, setCampaigns] = useState<Campaign[]>(MOCK_CAMPAIGNS);
-  const [dataSource, setDataSource] = useState<"mock" | "live" | "loading">("loading");
+  const [dataSource, setDataSource] = useState<"mock" | "live" | "csv" | "loading">("loading");
   const [apiError, setApiError] = useState<string | null>(null);
+  const [showImport, setShowImport] = useState(false);
+  const [csvError, setCsvError] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   async function loadCampaigns() {
     setDataSource("loading");
@@ -55,6 +119,26 @@ export default function CampaignsPage() {
 
   useEffect(() => { loadCampaigns(); }, []);
 
+  function handleCsvUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setCsvError(null);
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const text = ev.target?.result as string;
+      const parsed = parseGoogleAdsCsv(text);
+      if (parsed.length === 0) {
+        setCsvError("Could not parse this CSV. Make sure it's a Google Ads campaign report (Campaigns tab → Download).");
+        return;
+      }
+      setCampaigns(parsed);
+      setDataSource("csv");
+      setShowImport(false);
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  }
+
   const filtered = campaigns.filter((c) => {
     if (search && !c.name.toLowerCase().includes(search.toLowerCase())) return false;
     if (platformFilter !== "all" && c.platform !== platformFilter) return false;
@@ -74,6 +158,9 @@ export default function CampaignsPage() {
             <button onClick={loadCampaigns} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-colors" title="Refresh">
               <RefreshCw size={13} className={dataSource === "loading" ? "animate-spin" : ""} />
             </button>
+            <Button variant="outline" size="sm" onClick={() => setShowImport(true)}>
+              <Upload size={13} /> Import CSV
+            </Button>
             <Link href="/campaigns/create">
               <Button variant="primary" size="sm">
                 <Plus size={13} /> New Campaign
@@ -84,6 +171,52 @@ export default function CampaignsPage() {
       />
 
       <div className="flex-1 p-6 space-y-5 overflow-y-auto">
+
+        {/* CSV Import Modal */}
+        {showImport && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+            <div className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md mx-4 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-2">
+                  <FileSpreadsheet size={18} className="text-blue-500" />
+                  <h3 className="text-sm font-semibold text-slate-900">Import Google Ads CSV</h3>
+                </div>
+                <button onClick={() => { setShowImport(false); setCsvError(null); }} className="text-slate-400 hover:text-slate-600">
+                  <X size={16} />
+                </button>
+              </div>
+
+              <div className="space-y-3 text-xs text-slate-600 mb-5">
+                <p className="font-medium text-slate-700">How to export from Google Ads:</p>
+                <ol className="space-y-1.5 list-none">
+                  {[
+                    "Open Google Ads and go to Campaigns",
+                    'Click the download icon (↓) at the top right of the table',
+                    'Choose "CSV" format',
+                    "Upload that file here",
+                  ].map((step, i) => (
+                    <li key={i} className="flex gap-2">
+                      <span className="w-4 h-4 rounded-full bg-blue-100 text-blue-600 font-bold flex items-center justify-center flex-shrink-0 text-[10px]">{i + 1}</span>
+                      {step}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              <input ref={fileRef} type="file" accept=".csv" className="hidden" onChange={handleCsvUpload} />
+
+              {csvError && <p className="text-[11px] text-red-500 mb-3">{csvError}</p>}
+
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="w-full flex flex-col items-center justify-center gap-2 py-8 rounded-xl border-2 border-dashed border-slate-200 hover:border-blue-400 hover:bg-blue-50 transition-colors cursor-pointer"
+              >
+                <Upload size={20} className="text-slate-400" />
+                <span className="text-xs font-medium text-slate-500">Click to choose your CSV file</span>
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Demo data banner */}
         {dataSource === "mock" && (
@@ -107,6 +240,16 @@ export default function CampaignsPage() {
           <div className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-50 border border-emerald-200">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             <p className="text-xs font-medium text-emerald-700">Live Google Ads data · Last synced just now</p>
+          </div>
+        )}
+
+        {dataSource === "csv" && (
+          <div className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-blue-50 border border-blue-200">
+            <FileSpreadsheet size={14} className="text-blue-500 flex-shrink-0" />
+            <p className="text-xs font-medium text-blue-700 flex-1">Showing data from your imported CSV · {campaigns.length} campaigns loaded</p>
+            <button onClick={() => { setCampaigns(MOCK_CAMPAIGNS); setDataSource("mock"); }} className="text-[10px] text-blue-500 hover:text-blue-700 font-medium">
+              Clear
+            </button>
           </div>
         )}
 

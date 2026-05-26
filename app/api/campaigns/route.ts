@@ -2,11 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 const clean = (v = "") => v.replace(/﻿/g, "").trim();
 
-async function getFreshAccessToken(): Promise<string> {
-  const clientId = clean(process.env.GOOGLE_ADS_CLIENT_ID);
-  const clientSecret = clean(process.env.GOOGLE_ADS_CLIENT_SECRET);
-  const refreshToken = clean(process.env.GOOGLE_ADS_REFRESH_TOKEN);
-
+async function refreshAccessToken(refreshToken: string): Promise<string> {
+  const clientId = clean(process.env.GOOGLE_OAUTH_CLIENT_ID || process.env.GOOGLE_ADS_CLIENT_ID);
+  const clientSecret = clean(process.env.GOOGLE_OAUTH_CLIENT_SECRET || process.env.GOOGLE_ADS_CLIENT_SECRET);
   if (!clientId || !clientSecret || !refreshToken) return "";
 
   const res = await fetch("https://oauth2.googleapis.com/token", {
@@ -28,41 +26,44 @@ async function getFreshAccessToken(): Promise<string> {
 export async function GET(req: NextRequest) {
   const accountId = clean(
     req.cookies.get("google_account_id")?.value ||
-    process.env.GOOGLE_ADS_CUSTOMER_ID ||
-    ""
+    process.env.GOOGLE_ADS_CUSTOMER_ID || ""
   ).replace(/-/g, "");
 
   const developerToken = clean(process.env.GOOGLE_ADS_DEVELOPER_TOKEN);
-  const loginCustomerId = clean(process.env.GOOGLE_ADS_MANAGER_ID);
 
   if (!accountId) {
-    return NextResponse.json({ source: "mock", error: "No Ad Account ID set. Enter it in the sidebar to connect." });
+    return NextResponse.json({ source: "mock", error: "No Ad Account ID — enter it via the sidebar Connect button." });
   }
   if (!developerToken) {
     return NextResponse.json({ source: "mock", error: "GOOGLE_ADS_DEVELOPER_TOKEN is missing." });
   }
 
-  // Always get a fresh access token via refresh token
-  const accessToken = await getFreshAccessToken();
+  // Get access token: prefer cookie (from OAuth flow), else refresh via env refresh token
+  let accessToken = clean(req.cookies.get("google_ads_access_token")?.value || "");
+  const refreshToken = clean(
+    req.cookies.get("google_ads_refresh_token")?.value ||
+    process.env.GOOGLE_ADS_REFRESH_TOKEN || ""
+  );
+
+  if (!accessToken && refreshToken) {
+    accessToken = await refreshAccessToken(refreshToken);
+  }
+
   if (!accessToken) {
-    return NextResponse.json({ source: "mock", error: "Could not obtain access token. Check GOOGLE_ADS_CLIENT_ID, GOOGLE_ADS_CLIENT_SECRET and GOOGLE_ADS_REFRESH_TOKEN." });
+    return NextResponse.json({
+      source: "mock",
+      error: "Not authenticated. Go to Settings → API Connections → click 'Connect Google Ads' to authorise.",
+    });
   }
 
   const gaql = `
     SELECT
-      campaign.id,
-      campaign.name,
-      campaign.status,
+      campaign.id, campaign.name, campaign.status,
       campaign.advertising_channel_type,
       campaign_budget.amount_micros,
-      metrics.cost_micros,
-      metrics.impressions,
-      metrics.clicks,
-      metrics.ctr,
-      metrics.average_cpc,
-      metrics.conversions,
-      metrics.cost_per_conversion,
-      metrics.all_conversions_value
+      metrics.cost_micros, metrics.impressions, metrics.clicks,
+      metrics.ctr, metrics.average_cpc, metrics.conversions,
+      metrics.cost_per_conversion, metrics.all_conversions_value
     FROM campaign
     WHERE segments.date DURING LAST_30_DAYS
     ORDER BY metrics.cost_micros DESC
@@ -78,22 +79,22 @@ export async function GET(req: NextRequest) {
           "Content-Type": "application/json",
           "developer-token": developerToken,
           "Authorization": `Bearer ${accessToken}`,
-          ...(loginCustomerId ? { "login-customer-id": loginCustomerId } : {}),
         },
         body: JSON.stringify({ query: gaql }),
       }
     );
 
+    const text = await res.text();
     if (!res.ok) {
-      const err = await res.json();
-      const message =
-        err?.error?.details?.[0]?.errors?.[0]?.message ||
-        err?.error?.message ||
-        `Google Ads API error (${res.status})`;
+      let message = `Google Ads API error (${res.status})`;
+      try {
+        const err = JSON.parse(text);
+        message = err?.error?.details?.[0]?.errors?.[0]?.message || err?.error?.message || message;
+      } catch {}
       return NextResponse.json({ source: "mock", error: message });
     }
 
-    const data = await res.json();
+    const data = JSON.parse(text);
     const rows = data.results || [];
 
     const campaigns = rows.map((row: any, i: number) => {

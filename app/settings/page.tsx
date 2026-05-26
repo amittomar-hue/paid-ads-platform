@@ -78,17 +78,19 @@ export default function SettingsPage() {
               </Card>
 
               <Card>
-                <CardHeader title="Google Ads API" subtitle="OAuth 2.0 credentials for live campaign data" action={<span className="text-[10px] text-amber-400 bg-amber-500/15 px-2 py-0.5 rounded">Not Connected</span>} />
+                <CardHeader title="Google Ads API" subtitle="OAuth 2.0 — authorise live campaign data access" action={<span className="text-[10px] text-emerald-400 bg-emerald-500/15 px-2 py-0.5 rounded">Dev Token Set</span>} />
                 <div className="space-y-3">
-                  <Input label="Developer Token" type="password" value={googleKey} onChange={(e) => setGoogleKey(e.target.value)} placeholder="Enter Google Ads Developer Token" hint="Found in Google Ads → Tools → API Center" />
-                  <Input label="Customer ID" placeholder="123-456-7890" />
-                  <Input label="OAuth Client ID" placeholder="your-client-id.apps.googleusercontent.com" />
-                  <div className="flex gap-2">
-                    <Button variant="primary" size="sm" onClick={save}>
-                      {saved ? <><CheckCircle size={13} /> Saved</> : "Save Credentials"}
-                    </Button>
-                    <Button variant="outline" size="sm">Test Connection</Button>
+                  <div className="p-3 rounded-lg bg-blue-500/8 border border-blue-500/20 text-xs text-slate-600 space-y-1">
+                    <p>Developer Token and Customer ID are already configured. Complete OAuth below to grant live campaign access.</p>
                   </div>
+                  <div className="flex gap-2">
+                    <a href="/api/auth/google">
+                      <Button variant="primary" size="sm">
+                        <CheckCircle size={13} /> Connect Google Ads Account
+                      </Button>
+                    </a>
+                  </div>
+                  <p className="text-[10px] text-slate-400">You will be redirected to Google to authorise access. Requires a Google Ads OAuth 2.0 Web App client — set <code>GOOGLE_OAUTH_CLIENT_ID</code> and <code>GOOGLE_OAUTH_CLIENT_SECRET</code> in your environment.</p>
                 </div>
               </Card>
 

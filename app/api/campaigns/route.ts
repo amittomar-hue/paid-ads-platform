@@ -89,8 +89,10 @@ export async function GET(req: NextRequest) {
       let message = `Google Ads API error (${res.status})`;
       try {
         const err = JSON.parse(text);
-        message = err?.error?.details?.[0]?.errors?.[0]?.message || err?.error?.message || message;
-      } catch {}
+        message = err?.error?.details?.[0]?.errors?.[0]?.message ||
+                  err?.error?.details?.[0]?.message ||
+                  err?.error?.message || text.slice(0, 300);
+      } catch { message = text.slice(0, 300); }
       return NextResponse.json({ source: "mock", error: message });
     }
 

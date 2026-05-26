@@ -8,7 +8,8 @@ export async function GET(req: NextRequest) {
   ).replace(/-/g, "");
 
   const developerToken = process.env.GOOGLE_ADS_DEVELOPER_TOKEN || "";
-  const apiKey = process.env.GOOGLE_API_KEY || "";
+  const accessToken = process.env.GOOGLE_ADS_ACCESS_TOKEN || "";
+  const loginCustomerId = process.env.GOOGLE_ADS_MANAGER_ID || "";
 
   if (!accountId) {
     return NextResponse.json({
@@ -20,8 +21,14 @@ export async function GET(req: NextRequest) {
   if (!developerToken) {
     return NextResponse.json({
       source: "mock",
-      error:
-        "GOOGLE_ADS_DEVELOPER_TOKEN is missing. The Google API key (AIzaSy…) is a Cloud API key — it cannot access Google Ads data. You need a separate Developer Token from Google Ads → Tools → API Center.",
+      error: "GOOGLE_ADS_DEVELOPER_TOKEN is missing.",
+    });
+  }
+
+  if (!accessToken) {
+    return NextResponse.json({
+      source: "mock",
+      error: "GOOGLE_ADS_ACCESS_TOKEN is missing.",
     });
   }
 
@@ -54,7 +61,8 @@ export async function GET(req: NextRequest) {
         headers: {
           "Content-Type": "application/json",
           "developer-token": developerToken,
-          ...(apiKey ? { "x-goog-api-key": apiKey } : {}),
+          "Authorization": `Bearer ${accessToken}`,
+          ...(loginCustomerId ? { "login-customer-id": loginCustomerId } : {}),
         },
         body: JSON.stringify({ query: gaql }),
       }

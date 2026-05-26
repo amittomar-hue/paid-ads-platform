@@ -1,15 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 
+// Strip BOM (U+FEFF) and whitespace that PowerShell/cmd can inject into env vars
+const clean = (v = "") => v.replace(/﻿/g, "").trim();
+
 export async function GET(req: NextRequest) {
-  const accountId = (
+  const accountId = clean(
     req.cookies.get("google_account_id")?.value ||
     process.env.GOOGLE_ADS_CUSTOMER_ID ||
     ""
   ).replace(/-/g, "");
 
-  const developerToken = process.env.GOOGLE_ADS_DEVELOPER_TOKEN || "";
-  const accessToken = process.env.GOOGLE_ADS_ACCESS_TOKEN || "";
-  const loginCustomerId = process.env.GOOGLE_ADS_MANAGER_ID || "";
+  const developerToken = clean(process.env.GOOGLE_ADS_DEVELOPER_TOKEN);
+  const accessToken = clean(process.env.GOOGLE_ADS_ACCESS_TOKEN);
+  const loginCustomerId = clean(process.env.GOOGLE_ADS_MANAGER_ID);
 
   if (!accountId) {
     return NextResponse.json({
